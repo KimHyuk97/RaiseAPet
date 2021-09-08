@@ -19,5 +19,5 @@ public class HotelDTO {
 	// HOTEL_RESERVATION
 	private String hotelUserName, hotelUserPhone, hotelCheckIn, hotelCheckOut, 
 					hotelAnimalKind, hotelSpecialNote, hotelPayment, hotelUserId;
-	private int hotelReservePrice, hotelReservePoint;
+	private int hotelReservePrice, hotelReservePoint, hotelReserveNum;
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.icia.project.dto.CouponDTO;
 import com.icia.project.dto.HotelDTO;
+import com.icia.project.dto.MemberDTO;
 @Repository
 public class HotelDAO {
 	@Autowired
@@ -59,6 +60,10 @@ public class HotelDAO {
 	// 포인트 적립
 	public int hotelPoint(HotelDTO hotel) {
 		return sql.update("Hotel.pointPlus",hotel);
+	}
+
+	public MemberDTO memberSelect(HotelDTO hotel) {
+		return sql.selectOne("Hotel.memberSelect",hotel);
 	}
 
 	

@@ -8,7 +8,7 @@ import lombok.Data;
 public class ReviewDTO {
 
 	private String reviewContents, reviewImage, reviewRating, reviewDate, reviewBlind, reviewTitle, reviewKind, reviewUserId;
-	private int reviewNum, reviewLike;
+	private int reviewNum, reviewLike, reserveNum;
 	private MultipartFile reviewImageFile;
 	// 좋아요
 	private String likeUserId;

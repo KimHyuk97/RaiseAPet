@@ -49,6 +49,10 @@ public class MedicalDAO {
 	public void medicalReservationAddPoint(MedicalDTO medical) {
 		sql.update("medical.memberAddpoint",medical);		
 	}
+
+	public MemberDTO memberSelect(MedicalDTO medical) {
+		return sql.selectOne("medical.memberSelect",medical);
+	}
 	
 
 

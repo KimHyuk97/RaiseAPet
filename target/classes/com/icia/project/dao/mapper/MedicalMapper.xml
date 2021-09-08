@@ -20,7 +20,7 @@
   <insert id="DoctorReservation" parameterType="medical">
   	INSERT INTO 
   	MEDICAL_RESERVATION
-  	VALUES(#{medicalReserveDate},#{medicalReserveTime},#{medicalReserveAnimalKind},#{medicalReserveAnimalAge},#{medicalReserveAnimalNote},#{medicalReserveSubject},#{medicalReserveDoctor},#{medicalReserveUserName},#{medicalReservePrice},#{medicalReservePrice}*0.005,#{medicalReservePayment})
+  	VALUES(MEDICAL_RESERVE_SEQ.nextVal,#{medicalReserveDate},#{medicalReserveTime},#{medicalReserveAnimalKind},#{medicalReserveAnimalAge},#{medicalReserveAnimalNote},#{medicalReserveSubject},#{medicalReserveDoctor},#{medicalReserveUserId},#{medicalReservePrice},#{medicalReservePrice}*0.05,#{medicalReservePayment},0)
   </insert>
   
   <!--쿠폰사용-->
@@ -36,8 +36,12 @@
     <!--포인트적립-->
   <update id="memberAddpoint" parameterType="medical">
   	UPDATE MEMBERS
-	SET USERPOINT = USERPOINT + (#{medicalReservePrice}*0.005)
-	WHERE USERID = #{medicalReserveUserName}
+	SET USERPOINT = USERPOINT + (#{medicalReservePrice}*0.05)
+	WHERE USERID = #{medicalReserveUserId}
   </update>
+  
+  <select id="memberSelect" parameterType="medical" resultType="member">
+  	SELECT * FROM MEMBERS WHERE USERID = #{medicalReserveUserId}
+  </select>
 
   </mapper>

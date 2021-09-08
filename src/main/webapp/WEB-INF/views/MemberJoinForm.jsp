@@ -611,7 +611,7 @@
 	
 	<!-- SNS 계정으로 회원가입 하기 start -->
 	<a href="naverjoin"><img width="450" src="resources/img/naverJoin.png"></a><br>
-	<a href="https://kauth.kakao.com/oauth/authorize?client_id=964cb0d4419ff73c619b3139a1a93c8f&redirect_uri=http://localhost:9090/project/join&response_type=code">
+	<a href="https://kauth.kakao.com/oauth/authorize?client_id=964cb0d4419ff73c619b3139a1a93c8f&redirect_uri=http://106.243.194.230:9092/project/join&response_type=code">
 	<img width="450" src="resources/img/kakaoJoin.png"></a><br>
 	<!-- SNS 계정으로 회원가입 하기 end -->
 	</div>

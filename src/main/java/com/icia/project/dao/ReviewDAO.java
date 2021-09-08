@@ -38,9 +38,22 @@ public class ReviewDAO {
 		return sql.selectOne("Review.MedicalReview", code);
 	}
 	//리뷰 작성
-	public void reviewWrite(ReviewDTO review) {
-		sql.insert("Review.ReviewWrite", review);
+	public int reviewWrite(ReviewDTO review) {
+		return sql.insert("Review.ReviewWrite", review);
 	}
+		//리뷰 생성 시 카운트 +1
+		public void reviewHotelUp(int reserveNum) {
+			sql.update("Review.HotelUp", reserveNum);
+		}
+		public void reviewBeautyUp(int reserveNum) {
+			sql.update("Review.BeautyUp", reserveNum);
+		}
+		public void reviewMedicalUp(int reserveNum) {
+			sql.update("Review.MedicalUp", reserveNum);
+		}
+		public void reviewGoodsUp(int reserveNum) {
+			sql.update("Review.GoodsUp", reserveNum);
+		}
 	//목록 가져올 게시글 카운팅하기
 	public int ListCount(HashMap<String, Object> reviewMap) {
 		return sql.selectOne("Review.ReviewCount", reviewMap);
@@ -99,5 +112,6 @@ public class ReviewDAO {
 	public void reviewDelete(int reviewNum) {
 		sql.insert("Review.ReviewDelete", reviewNum);
 	}
+	
 	
 }

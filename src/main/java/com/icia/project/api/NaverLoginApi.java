@@ -26,7 +26,7 @@ public class NaverLoginApi {
 	private final static String CLIENT_SECRET = "snWgS93F8w";
 	// 여기 주소 값이 NaverLoginController의 callback 호출 처리 메소드 주소값 부분과 일치해야 함.(네이버 개발자
 	// 페이지의 주소도 동일해야 함.)
-	private final static String REDIRECT_URI = "http://localhost:9090/project/naverloginok";
+	private final static String REDIRECT_URI = "http://106.243.194.230:9092/project/naverloginok";
 	private final static String SESSION_STATE = "oauth_state";
 	/* 프로필 조회 API URL */
 	private final static String PROFILE_API_URL = "https://openapi.naver.com/v1/nid/me";

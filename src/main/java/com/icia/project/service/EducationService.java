@@ -2,6 +2,7 @@ package com.icia.project.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -15,6 +16,8 @@ import com.icia.project.dto.EduCommentDTO;
 import com.icia.project.dto.EduCommentLikeDTO;
 import com.icia.project.dto.EducationDTO;
 import com.icia.project.dto.MemberDTO;
+import com.icia.project.dto.PageDTO;
+import com.icia.project.dto.ReviewDTO;
 
 @Service
 public class EducationService {
@@ -29,10 +32,53 @@ public class EducationService {
 	
 	List<EduCommentDTO> educommentList = new ArrayList<EduCommentDTO>();
 	
-	// 교육 리스트 
-	public ModelAndView educationList(EducationDTO education) {
-		List<EducationDTO> educationList = edudao.educationList(education);
-		mav.addObject("educationList", educationList);
+	private static final int BLOCK_LIMIT = 5;
+	
+	PageDTO paging = new PageDTO();
+	
+	List<EducationDTO> eduResult = new ArrayList<EducationDTO>();
+	
+	//교육리스트	
+	public ModelAndView educationList(String searchData, String eduAnimalKind, String lineUp, int page, int count) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("searchData", searchData);
+		map.put("eduAnimalKind",eduAnimalKind);
+		
+		
+				int listCount = edudao.ListCount(map); 
+				int startRow = (page - 1) * count + 1;
+				int endRow = page * count;
+				int maxPage = (int) (Math.ceil((double) listCount / count));	// ceil : 값보다 큰 정수를 찾는 것.
+				int startPage = (((int) (Math.ceil((double) page / BLOCK_LIMIT))) - 1) * BLOCK_LIMIT + 1;
+				int endPage = startPage + BLOCK_LIMIT - 1;
+				if (endPage > maxPage) {
+					endPage = maxPage;
+				}
+				paging.setEndRow(endRow);
+				paging.setStartRow(startRow);
+				paging.setEndPage(endPage);
+				paging.setPage(page);
+				paging.setStartPage(startPage);
+				paging.setMaxPage(maxPage);
+		
+		
+		
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		
+		if(lineUp.equals("좋아요순")) {
+			eduResult=edudao.eduLikeLineUp(map);
+		} else if (lineUp.equals("오래된순")){
+			eduResult=edudao.eduHitLineUp(map);
+		} else {
+			eduResult = edudao.eduList(map);
+		}
+		mav.addObject("count", count);
+		mav.addObject("lineUp", lineUp);
+		mav.addObject("searchData", searchData);
+		mav.addObject("menu", eduAnimalKind);
+		mav.addObject("paging", paging);
+		mav.addObject("eduResult", eduResult);
 		mav.setViewName("Education");
 		return mav;
 	}
@@ -62,7 +108,6 @@ public class EducationService {
 
 	// 댓글 작성
 	public List<EduCommentDTO> educationComment(EduCommentDTO eduComment)throws IllegalStateException, IOException {
-		System.out.println("educomment=="+eduComment);
 		int educationComment = edudao.educationComment(eduComment);
 		if(educationComment>0) {
 			educommentList = edudao.educationCommentList(eduComment.getCommentEduNum());
@@ -164,6 +209,7 @@ public class EducationService {
 		
 		return eduu;
 	}
+
 
 
 }

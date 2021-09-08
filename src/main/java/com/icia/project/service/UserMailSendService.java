@@ -20,8 +20,7 @@ public class UserMailSendService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
-	@Autowired
-	private SqlSessionTemplate sqlSession;
+
 	
 	@Autowired
 	HttpSession session;

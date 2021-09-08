@@ -65,7 +65,7 @@ public class AdminController {
 	//호텔 수정 처리
 	@RequestMapping(value = "hotelBoardModifyProcess", method = RequestMethod.POST)
 	public ModelAndView hotelBoardModifyProcess(@ModelAttribute HotelDTO hotel, MultipartHttpServletRequest multiRequest) throws IllegalStateException, IOException {
-		mav = adminSvc.hotelBoardModifyProcess(hotel, multiRequest.getFiles("hotelImageFile"));
+		mav = adminSvc.hotelBoardModifyProcess(hotel, multiRequest.getFiles("hotelRoomImageFile"));
 		return mav;
 	}
 	// 호텔 삭제
@@ -154,8 +154,9 @@ public class AdminController {
 	// 교육
 	//교육 목록
 	@RequestMapping(value = "educationManagement", method = RequestMethod.GET)
-	public ModelAndView educationManagement() {
-		mav = adminSvc.educationManagement();
+	public ModelAndView educationManagement(@RequestParam(value="page", required=false, defaultValue="1") int page,
+											@RequestParam(value="eduAnimalKind", required=false, defaultValue="") String eduAnimalKind) {
+		mav = adminSvc.educationManagement(page, eduAnimalKind);
 		return mav;
 	}
 	//교육 작성
@@ -179,7 +180,6 @@ public class AdminController {
 	//교육 수정 처리
 	@RequestMapping(value = "educationBoardModifyProcess", method = RequestMethod.POST)
 	public ModelAndView educationBoardModifyProcess(@ModelAttribute EducationDTO education) throws IllegalStateException, IOException {
-		System.out.println("dfasdasdasd");
 		mav = adminSvc.educationBoardModifyProcess(education);
 		return mav;
 	}
@@ -397,4 +397,6 @@ public class AdminController {
 		mav = adminSvc.adminGoodsBuyList(page);
 		return mav;
 	}
+	//용품 배송중으로 바꾸기
+	
 }

@@ -69,35 +69,6 @@
 	}
 </style>
 <script type="text/javaScript" src="${pageContext.request.contextPath}/resources/js/jquery-3.5.1.js"></script>
-<script>
-	// 비밀번호 정규식 검사
-	function pwCheck(){
-		var pw = $("input[name=userPw]").val();
-		var num = pw.search(/[0-9]/g);
-		var eng = pw.search(/[a-z]/ig);
-		var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);
-	
-		if(pw.length < 2 || pw.length > 16){
-			alert("3자리 ~ 15자리 이내로 입력해주세요.");
-			$("input[name=userPw]").val('');
-			$("input[name=userPw]").focus();
-			// 비밀번호가 정규식에 포함 되지 않았을 경우 focus와 val를 설정하여 다른 곳으로 갈 수 없도록 함.
-			return false;
-		}else if(pw.search(/\s/) != -1){
-			alert("비밀번호는 공백 없이 입력해주세요.");
-			$("input[name=userPw]").val('');
-			$("input[name=userPw]").focus();
-			return false;
-		}else if(num < 0 || eng < 0 || spe < 0 ){
-			alert("영문,숫자, 특수문자를 혼합하여 입력해주세요.");
-			$("input[name=userPw]").val('');
-			$("input[name=userPw]").focus();
-			return false;
-		}else {
-			return true;
-		}
-	}
-</script>
 </head>
 <header>
 	<br><br><br>
@@ -154,13 +125,7 @@
 			
 			<tr>
 				<td>
-					<input type="password" class="input" id="userPw" name="userPw" onchange="pwCheck()" value="${sessionScope.loginUser.userPw}">
-				</td>
-			</tr>
-			
-			<tr>
-				<td>
-					<input type="text" class="input" id="userName" name="userName" value="${sessionScope.loginUser.userName}">
+					<input type="text" class="input" id="userName" name="userName" value="${sessionScope.loginUser.userName}" maxlength="5">
 				</td>
 			</tr>
 			
@@ -181,7 +146,6 @@
 					<input type="hidden" class="input" id="userAddress" name="userAddress" value="${sessionScope.loginUser.userAddress}">
 				</td>
 			</tr>
-			
 			<tr>
 				<td>
 					<input type="email" class="input" id="userEmail" name="userEmail" value="${sessionScope.loginUser.userEmail}">
@@ -193,7 +157,6 @@
 					<input type="text" class="input" id="userPhone" name="userPhone" value="${sessionScope.loginUser.userPhone}" maxlength="11" readonly>
 				</td>
 			</tr>
-			
 			<tr>
 				<td>
 					<input type="submit" class="btn" value="수정">
@@ -202,7 +165,7 @@
 			</tr>
 		</table>
 	</form>
-	<button class="btn3" onclick="location.href='memberMyPage'">취소</button>
+	<button class="btn3" onclick="window.history.back()">취소</button>
 	<!-- 수정 form end -->
 	
 	</div>

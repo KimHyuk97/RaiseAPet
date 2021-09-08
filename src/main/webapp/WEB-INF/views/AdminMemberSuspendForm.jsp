@@ -36,16 +36,34 @@ function suspendSubmit(reviewUserId, reviewNum, reportUserId){
 	});
 };
 </script>
-<body>
+<style>
+	table{
+    	margin:10% auto; 
+    	width:70%;
+    }
+    th{
+    	width:30%;
+    	 text-align:center;
+    }
+    th, td{
+    	border-bottom: 1px solid #ddd;
+    	height : 60px;
+		
+    }
+    input{
+    	border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;
+    	height : 30px;
+    	padding: .8em .5em;
+    }
+    button{
+    	float:right;
+    }
+</style>
+<body style="background-color:#eeeeee;">
 	<table>
 		<tr>
-			<td>${report.reviewUserId}</td><td>${report.reportKind }</td>
-		</tr>
-		<tr>
-			<td>${report.reportUserId}</td>
-		</tr>
-		<tr>
-			<td colspan="2">
+			<td style="width:40%;">리뷰 작성자</td><td>${report.reviewUserId}</td>
+			<td rowspan="3" style="text-align:center;">
 				<select id="suspendDeadLine">
 					<option value="1">1일</option>
 					<option value="3">3일</option>
@@ -58,7 +76,14 @@ function suspendSubmit(reviewUserId, reviewNum, reportUserId){
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2"><button onclick="suspendSubmit('${report.reviewUserId}',${report.reviewNum },'${report.reportUserId}')">정지</button></td>
+			<td>리뷰 신고 사유</td><td>${report.reportKind }</td>
+		</tr>
+		<tr>
+			<td>신고자</td><td>${report.reportUserId}</td>
+		</tr>
+		
+		<tr>
+			<td colspan="3"><button onclick="suspendSubmit('${report.reviewUserId}',${report.reviewNum },'${report.reportUserId}')">정지</button></td>
 		</tr>
 	</table>
 </body>

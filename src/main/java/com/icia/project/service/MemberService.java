@@ -174,7 +174,7 @@ public class MemberService {
 		
 		if(joinResult > 0) {
 			if(pwEncoder.matches(password, member.getUserPw())) {
-				mav.setViewName("Index");
+				mav.setViewName("MemberLoginForm");
 			}else {
 				mav.setViewName("Index");
 			}
@@ -205,7 +205,7 @@ public class MemberService {
 			if(loginResult != null) {
 				if(loginResult.getUserId().equals("admin")) {
 					session.setAttribute("loginUser", loginResult);
-					mav.setViewName("BoardManagement");
+					mav.setViewName("AdminDashboard");
 				}else {
 					session.setAttribute("loginUser", loginResult);
 					mav.setViewName("Index");
@@ -369,7 +369,7 @@ public class MemberService {
 		session.removeAttribute("userPwFindId");
 		
 		if(newPasswordResult > 0) {
-			mav.setViewName("Index");
+			mav.setViewName("MemberLoginForm");
 		}else {
 			mav.setViewName("Index");
 		}
@@ -447,23 +447,6 @@ public class MemberService {
 			member.setUserAddress(userAddress1);
 		}else {
 			member.setUserAddress(member.getUserAddress());
-		}
-		
-		// [비밀번호 암호화]
-		
-		String password = member.getUserPw(); // 입력한 비밀번호
-		// 비밀번호 변경하지 않았을 경우 -> 암호화 된 비밀번호가 넘어온다.
-		
-		// db에서 id의 조건에 맞는 pw를 가져온다.
-		String passwordConfirm = mDAO.pwCheck(member.getUserId());
-		
-		// 비밀번호가 바뀌었다면 encode(암호화) 후 dao로 이동
-		// String 타입을 비교해야 하기 때문에 .equeals를 사용함.
-		if(!password.equals(passwordConfirm)) {
-			String encodePassword = pwEncoder.encode(password); // 암호화 비밀번호
-			member.setUserPw(encodePassword);
-		}else {
-			member.setUserPw(password);
 		}
 		
 		// [성별]
@@ -663,8 +646,6 @@ public class MemberService {
 		String userId = member.getUserId();
 		
 		int couponCountResult = mDAO.couponCount(userId);
-		
-		System.out.println("couponCountResult : " + couponCountResult);
 		
 		if(couponCountResult >= 0) {
 			session.setAttribute("couponCount", couponCountResult);
@@ -1099,10 +1080,8 @@ public class MemberService {
 		
 		if(addressCheck == 0) { // 기존 배송지
 			userAddress = member.getUserAddress(); // 신규 주소지가 없으면 기존 주소지를 가져오고
-			System.out.println("기존 : " + userAddress);
 		}else { // 1 : 신규 배송지
 			userAddress = address; // 신규 주소지가 있으면 신규 주소지로 가져간다.
-			System.out.println("신규 : " + userAddress);
 		}
 		
 		userId = member.getUserId();
@@ -1137,8 +1116,6 @@ public class MemberService {
 		int basketGoodsCount = basketInfo.getBasketGoodsCount();
 		// 상품 갯수 * 상품 가격 = 합계 금액
 		int basketPrice = total_pay;
-		
-		System.out.println("basketGoodsCountKey" + basketGoodsCount);
 		
 		map.put("basketGoodsCountKey", basketGoodsCount);
 		map.put("basketPriceKey", basketPrice);
@@ -1189,104 +1166,6 @@ public class MemberService {
 		session.removeAttribute("newAddress");
 		// 새 주소 session 삭제
 		
-		return resultMsg;
-	}
-	
-	// ------------------------ 결제내역 취소 ------------------------------
-
-	// 호텔 결제내역 취소
-	public String hotelPaymentDelete(String hotelCode) {
-		
-		String resultMsg = null;
-		
-		MemberDTO member = (MemberDTO) session.getAttribute("loginUser");
-		String userId = member.getUserId();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("hotelCodeKey", hotelCode);
-		map.put("userIdKey", userId);
-		
-		int hotelPayDelete = mDAO.hotelPayDelete(map);
-		
-		if(hotelPayDelete > 0) {
-			resultMsg = "OK";
-		}else {
-			resultMsg = "NO";
-		}
-		
-		return resultMsg;
-	}
-	
-	// 병원 결제내역 취소
-	public String medicalPaymentDelete(String medicalReserveDate) {
-
-		String resultMsg = null;
-		
-		MemberDTO member = (MemberDTO) session.getAttribute("loginUser");
-		String userId = member.getUserId();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("medicalReserveDateKey", medicalReserveDate);
-		map.put("userIdKey", userId);
-		
-		int medicalPayDelete = mDAO.medicalPayDelete(map);
-		
-		if(medicalPayDelete > 0) {
-			resultMsg = "OK";
-		}else {
-			resultMsg = "NO";
-		}
-		
-		return resultMsg;
-	}
-	
-	// 미용 결제내역 취소
-	public String beautyPaymentDelete(String beautyReserveDate) {
-
-		String resultMsg = null;
-		
-		MemberDTO member = (MemberDTO) session.getAttribute("loginUser");
-		String userId = member.getUserId();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("beautyReserveDateKey", beautyReserveDate);
-		map.put("userIdKey", userId);
-		
-		int beautyPayDelete = mDAO.beautyPayDelete(map);
-		
-		if(beautyPayDelete > 0) {
-			resultMsg = "OK";
-		}else {
-			resultMsg = "NO";
-		}
-		
-		return resultMsg;
-	}
-	
-	// 용품 결제내역 취소
-	public String goodsPaymentDelete(String buyGoodsNum) {
-
-		String resultMsg = null;
-		
-		MemberDTO member = (MemberDTO) session.getAttribute("loginUser");
-		String userId = member.getUserId();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("buyGoodsNumKey", buyGoodsNum);
-		map.put("userIdKey", userId);
-		
-		int goodsPaymentDelete = mDAO.goodsPayDelete(map);
-		
-		if(goodsPaymentDelete > 0) {
-			resultMsg = "OK";
-		}else {
-			resultMsg = "NO";
-		}
-
 		return resultMsg;
 	}
 
@@ -1348,7 +1227,6 @@ public class MemberService {
 		if(totalSum >= 10000) { // 합계가 만원 이상이면 member_coupon table을 select
 			// 쿠폰함 조회
 			List<CouponDTO> couponList = mDAO.userCouponList(userId);
-			System.out.println("couponList : " + couponList);
 			mav.addObject("userCoupon", couponList); // 회원의 쿠폰함
 		}else {
 			mav.addObject("userCoupon", null);
@@ -1381,11 +1259,9 @@ public class MemberService {
 		if(addressCheck == 0) { // 기존 배송지
 			userAddress = member.getUserAddress(); // 신규 주소지가 없으면 기존 주소지를 가져오고
 			map.put("addressKey", userAddress); // 주소
-			System.out.println("기존 : " + userAddress);
 		}else { // 1 : 신규 배송지
 			userAddress = address; // 신규 배송지
 			map.put("addressKey", userAddress); // 주소
-			System.out.println("신규 : " + userAddress);
 		}
 				
 		// ---------- 상품 코드를 가지고 정보 불러오기 ----------
@@ -1440,4 +1316,99 @@ public class MemberService {
 		
 		return resultMsg;
 	}
+	
+	// -------------------------- 리뷰 작성 했는 지 확인 -------------------------------------
+	
+	// 호텔 리뷰
+	public String hotelReviewCheck(int hotelReserveNum) {
+		
+		String resultMsg = null;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("hotelReserveNumKey", hotelReserveNum);
+		
+		MemberDTO member = (MemberDTO) session.getAttribute("loginUser");
+		String userId = member.getUserId();
+		map.put("userIdKey", userId);
+		
+		int reviewCheck = mDAO.hotelReviewCheck(map);
+		
+		if(reviewCheck == 0) { // 리뷰 작성 X
+			resultMsg = "OK";
+		}else { // 리뷰 작성 O
+			resultMsg = "NO";
+		}
+		
+		return resultMsg;
+	}
+	
+	// 병원 리뷰
+	public String medicalReviewCheck(int medicalReserveNum) {
+		
+		String resultMsg = null;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("medicalReserveNumKey", medicalReserveNum);
+		
+		MemberDTO member = (MemberDTO) session.getAttribute("loginUser");
+		String userId = member.getUserId();
+		map.put("userIdKey", userId);
+		
+		int reviewCheck = mDAO.medicalReviewCheck(map);
+		
+		if(reviewCheck == 0) { // 리뷰 작성 X
+			resultMsg = "OK";
+		}else { // 리뷰 작성 O
+			resultMsg = "NO";
+		}
+		
+		return resultMsg;
+	}
+	
+	// 미용 리뷰
+	public String beautyReviewCheck(int beautyReserveNum) {
+		
+		String resultMsg = null;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("beautyReserveNumKey", beautyReserveNum);
+		
+		MemberDTO member = (MemberDTO) session.getAttribute("loginUser");
+		String userId = member.getUserId();
+		map.put("userIdKey", userId);
+		
+		int reviewCheck = mDAO.beautyReviewCheck(map);
+		
+		if(reviewCheck == 0) { // 리뷰 작성 X
+			resultMsg = "OK";
+		}else { // 리뷰 작성 O
+			resultMsg = "NO";
+		}
+		
+		return resultMsg;
+	}
+	
+	// 용품 리뷰
+	public String goodsReviewCheck(int goodsBuyNum) {
+		
+		String resultMsg = null;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("goodsBuyNumKey", goodsBuyNum);
+		
+		MemberDTO member = (MemberDTO) session.getAttribute("loginUser");
+		String userId = member.getUserId();
+		map.put("userIdKey", userId);
+		
+		int reviewCheck = mDAO.goodsReviewCheck(map);
+		
+		if(reviewCheck == 0) { // 리뷰 작성 X
+			resultMsg = "OK";
+		}else { // 리뷰 작성 O
+			resultMsg = "NO";
+		}
+		
+		return resultMsg;
+	}
+
 }

@@ -41,14 +41,14 @@
 	
 	<!-- 네이버 아이디로 회원가입 -->
 	<insert id="memberJoinNaver" parameterType="member">
-		INSERT INTO MEMBERS(USERID, USERPW, USERNAME, USERIMAGE, USERBIRTH, USERGENDER, USEREMAIL, USERPHONE, NAVERID)
-		VALUES(#{userId}, #{userPw}, #{userName}, #{userImage}, #{userBirth}, #{userGender}, #{userEmail}, #{userPhone}, #{naverId})
+		INSERT INTO MEMBERS(USERID, USERPW, USERNAME, USERADDRESS, USERIMAGE, USERBIRTH, USERGENDER, USEREMAIL, USERPHONE, NAVERID)
+		VALUES(#{userId}, #{userPw}, #{userName}, #{userAddress}, #{userImage}, #{userBirth}, #{userGender}, #{userEmail}, #{userPhone}, #{naverId})
 	</insert>
 	
 	<!-- 카카오 아이디로 회원가입 -->
 	<insert id="memberJoinKakao" parameterType="member">
-		INSERT INTO MEMBERS(USERID, USERPW, USERNAME, USERIMAGE, USERBIRTH, USERGENDER, USEREMAIL, USERPHONE, KAKAOID)
-		VALUES(#{userId}, #{userPw}, #{userName}, #{userImage}, #{userBirth}, #{userGender}, #{userEmail}, #{userPhone}, #{userKakao})
+		INSERT INTO MEMBERS(USERID, USERPW, USERNAME, USERIMAGE, USERADDRESS, USERBIRTH, USERGENDER, USEREMAIL, USERPHONE, KAKAOID)
+		VALUES(#{userId}, #{userPw}, #{userName}, #{userImage}, #{userAddress}, #{userBirth}, #{userGender}, #{userEmail}, #{userPhone}, #{kakaoId})
 	</insert>
 	
 	<!-- 암호화된 비밀번호 가져오기 -->
@@ -84,7 +84,7 @@
 	<!-- 회원 수정 -->
 	<update id="memberModify" parameterType="member">
 		UPDATE MEMBERS
-		SET USERID=#{userId}, USERPW=#{userPw}, USERNAME=#{userName}, USERIMAGE=#{userImage}, USERADDRESS=#{userAddress}, USEREMAIL=#{userEmail}, USERPHONE=#{userPhone}, USERGENDER=#{userGender}
+		SET USERID=#{userId}, USERNAME=#{userName}, USERIMAGE=#{userImage}, USERADDRESS=#{userAddress}, USEREMAIL=#{userEmail}, USERPHONE=#{userPhone}, USERGENDER=#{userGender}
 		WHERE USERID=#{userId}
 	</update>
 	
@@ -195,7 +195,7 @@
 	
 	<!-- 결제내역 - 호텔 페이징 -->
 	<select id="hotelPagingList" parameterType="hashMap" resultType="hotel">
-		SELECT * FROM (SELECT H.*,B.*, ROW_NUMBER() OVER(ORDER BY HOTELCODE ASC) 
+		SELECT * FROM (SELECT H.*,B.*, ROW_NUMBER() OVER(ORDER BY HOTELCODE DESC) 
         AS RN FROM HOTEL_RESERVATION H, HOTEL B 
 		WHERE HOTELCODE = HOTELRESERVECODE and HOTELUSERID=#{userIdKey})
       	WHERE RN BETWEEN #{startRowKey} AND #{endRowKey}
@@ -203,21 +203,23 @@
 	
 	<!-- 결제내역 - 미용 페이징 -->
 	<select id="beautyPagingList" parameterType="hashMap" resultType="beauty">
-		SELECT * 
-      	FROM (SELECT H.*, ROW_NUMBER() OVER(ORDER BY BEAUTYRESERVEDESIGNER ASC) AS RN FROM BEAUTY_RESERVATION H WHERE BEAUTYRESERVEUSERID=#{userIdKey}) 
+      	SELECT * 
+      	FROM (SELECT H.*, B.*, ROW_NUMBER() OVER(ORDER BY BEAUTYRESERVEDESIGNER DESC)
+        AS RN FROM BEAUTY_RESERVATION H, BEAUTY_DESIGNER B WHERE DESIGNERCODE = BEAUTYRESERVEDESIGNER AND BEAUTYRESERVEUSERID=#{userIdKey}) 
       	WHERE RN BETWEEN #{startRowKey} AND #{endRowKey}
 	</select>
 	
 	<!-- 결제내역 - 병원 페이징 -->
 	<select id="medicalPagingList" parameterType="hashMap" resultType="medical">
-		SELECT * FROM (SELECT H.*, ROW_NUMBER() OVER(ORDER BY MEDICALRESERVEDOCTOR ASC) AS RN 
-		FROM MEDICAL_RESERVATION H WHERE MEDICALRESERVEUSERID=#{userIdKey}) WHERE RN BETWEEN #{startRowKey} AND #{endRowKey}
+		SELECT * FROM (SELECT H.*,B.*, ROW_NUMBER() OVER(ORDER BY MEDICALRESERVEDOCTOR DESC) 
+		AS RN FROM MEDICAL_RESERVATION H, MEDICAL_DOCTOR B WHERE DOCTORCODE = MEDICALRESERVEDOCTOR AND MEDICALRESERVEUSERID=#{userIdKey}) 
+		WHERE RN BETWEEN #{startRowKey} AND #{endRowKey}
 	</select>
 	
 	<!-- 결제내역 - 용품 페이징 -->
 	<select id="goodsPagingList" parameterType="hashMap" resultType="goods">
 		SELECT * 
-      	FROM (SELECT H.*,B.*, ROW_NUMBER() OVER(ORDER BY BUYGOODSNUM ASC) 
+      	FROM (SELECT H.*,B.*, ROW_NUMBER() OVER(ORDER BY BUYGOODSNUM DESC) 
         AS RN FROM GOODS H, GOODS_BUY B WHERE GOODSNUM = BUYGOODSNUM AND BUYUSERID=#{userIdKey})
       	WHERE RN BETWEEN #{startRowKey} AND #{endRowKey}
 	</select>
@@ -225,7 +227,7 @@
 	<!-- 리뷰내역 - 페이징 -->
 	<select id="reviewPagingList" parameterType="hashMap" resultType="review">
 		SELECT * 
-      	FROM (SELECT H.*, ROW_NUMBER() OVER(ORDER BY REVIEWNUM ASC) 
+      	FROM (SELECT H.*, ROW_NUMBER() OVER(ORDER BY REVIEWNUM DESC) 
         AS RN FROM REVIEW H WHERE REVIEWUSERID=#{userIdKey})
       	WHERE RN BETWEEN #{startRowKey} AND #{endRowKey}
 	</select>
@@ -240,7 +242,7 @@
 	
 	<!-- 장바구니 - 페이징 -->
 	<select id="basketPagingList" parameterType="hashMap" resultType="goods">      	
-      	SELECT * FROM (SELECT H.*, B.*, ROW_NUMBER() OVER(ORDER BY BASKETGOODSNUM ASC) 
+      	SELECT * FROM (SELECT H.*, B.*, ROW_NUMBER() OVER(ORDER BY BASKETGOODSNUM DESC) 
         AS RN FROM GOODS_BASKET B, GOODS H WHERE GOODSNUM = BASKETGOODSNUM AND BASKETUSERID=#{userIdKey})
       	WHERE RN BETWEEN #{startRowKey} AND #{endRowKey}
 	</select>
@@ -263,7 +265,7 @@
 	
 	<!-- 결제내역 업데이트 -->
 	<insert id="buyInfoUpdate" parameterType="HashMap">
-		INSERT INTO GOODS_BUY VALUES(#{goodsNumKey}, #{userIdKey}, '온라인', #{addressKey}, '배송 준비 중', #{basketGoodsCountKey}, #{basketPriceKey})
+		INSERT INTO GOODS_BUY VALUES(GOODS_BUY_SEQ.NEXTVAL, #{goodsNumKey}, #{userIdKey}, '온라인', #{addressKey}, '배송 준비 중', #{basketGoodsCountKey}, #{basketPriceKey}, 0)
 	</insert>
 	
 	<!-- 장바구니 내역 삭제하기 -->
@@ -291,28 +293,6 @@
 		DELETE FROM MEMBER_COUPON WHERE USERID=#{userIdKey} AND COUPONCODE=#{couponCodeKey}
 	</delete>
 	
-	<!-- 결제내역 취소 -->
-
-	<!-- 호텔 결제내역 취소 -->
-	<delete id="hotelPayDelete">
-		DELETE FROM HOTEL_RESERVATION WHERE HOTELUSERID=#{userIdKey} AND HOTELCODE=#{hotelCode}
-	</delete>
-	
-	<!-- 병원 결제내역 취소 -->
-	<delete id="medicalPayDelete">
-		DELETE FROM MEDICAL_RESERVATION WHERE MEDICALRESERVEDATE=#{medicalReserveDateKey} AND MEDICALRESERVEUSERID=#{userIdKey}
-	</delete>
-	
-	<!-- 미용 결제내역 취소 -->
-	<delete id="beautyPayDelete">
-		DELETE FROM BEAUTY_RESERVATION WHERE BEAUTYRESERVEDATE=#{beautyReserveDateKey} AND BEAUTYRESERVEUSERID=#{userIdKey}
-	</delete>
-		
-	<!-- 용품 결제내역 취소 -->
-	<delete id="goodsPayDelete">
-		DELETE FROM GOODS_BUY WHERE BUYGOODSNUM=#{buyGoodsNumKey} AND BUYUSERID=#{userIdKey}
-	</delete>
-	
 	<!-- 쿠폰함 조회(결제내역) -->
 	<select id="userCouponList" parameterType="String" resultType="coupon">
 		SELECT * FROM COUPON M, MEMBER_COUPON C WHERE M.COUPONCODE = C.COUPONCODE AND USERID=#{userIdKey}
@@ -321,5 +301,25 @@
 	<!-- 여러 개 선택하여 결제 (장바구니) -->
 	<select id="basketGoodsSelect" parameterType="HashMap" resultType="goods">
 		SELECT * FROM GOODS_BASKET, GOODS WHERE GOODSNUM=BASKETGOODSNUM AND BASKETUSERID=#{userIdKey} AND BASKETGOODSNUM=#{goodsNumKey}
+	</select>
+		
+	<!-- 호텔 리뷰 확인 -->
+	<select id="hotelReviewCheck" parameterType="HashMap" resultType="int">
+		SELECT HOTELREVIEW FROM HOTEL_RESERVATION WHERE HOTELUSERID=#{userIdKey} AND HOTELRESERVENUM=#{hotelReserveNumKey}
+	</select>
+	
+	<!-- 병원 리뷰 확인 -->
+	<select id="medicalReviewCheck" parameterType="HashMap" resultType="int">
+		SELECT MEDICALREVIEW FROM MEDICAL_RESERVATION WHERE MEDICALRESERVEUSERID=#{userIdKey} AND MEDICALRESERVENUM=#{medicalReserveNumKey}
+	</select>
+	
+	<!-- 미용 리뷰 확인 -->
+	<select id="beautyReviewCheck" parameterType="HashMap" resultType="int">
+		SELECT BEAUTYREVIEW FROM BEAUTY_RESERVATION WHERE BEAUTYRESERVEUSERID=#{userIdKey} AND BEAUTYRESERVENUM=#{beautyReserveNumKey}
+	</select>
+	
+	<!-- 용품 리뷰 확인 -->
+	<select id="goodsReviewCheck" parameterType="HashMap" resultType="int">
+		SELECT GOODSREVIEW FROM GOODS_BUY WHERE BUYUSERID=#{userIdKey} AND GOODSBUYNUM=#{goodsBuyNumKey}	
 	</select>
 </mapper>

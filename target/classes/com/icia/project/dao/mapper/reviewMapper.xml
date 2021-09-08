@@ -7,23 +7,35 @@
 		SELECT COUNT(*) FROM MEMBERS WHERE USERID=#{userId} AND USERLOCK>SYSDATE
 	</select>
 	<!-- 리뷰 작성 전 정보 가져오기 -->
-	<select id="HotelReview" parameterType="String">
+	<select id="HotelReview" parameterType="String" resultType="hotel">
 		SELECT * FROM HOTEL WHERE HOTELCODE=#{code}
 	</select>
-	<select id="BeautyWrite" parameterType="String">
+	<select id="BeautyWrite" parameterType="String" resultType="beauty">
 		SELECT * FROM BEAUTY_DESIGNER WHERE DESIGNERCODE=#{code}
 	</select>
-	<select id="GoodsReview" parameterType="int">
+	<select id="GoodsReview" parameterType="int" resultType="goods">
 		SELECT * FROM GOODS WHERE GOODSNUM=#{num}
 	</select>
-	<select id="MedicalReview" parameterType="String">
+	<select id="MedicalReview" parameterType="String" resultType="medical">
 		SELECT * FROM MEDICAL_DOCTOR WHERE DOCTORCODE=#{code}
 	</select>
 	<!-- 리뷰 작성 -->
 	<insert id="ReviewWrite" parameterType="review">
-		INSERT INTO REVIEW VALUSE(REVIEWNUM_SEQ.NEXTVAL, #{reviewContents}, #{reviewImage}, #{reviewRating}, #{reviewDate},
-		null, 0, #{reviewTitle}, #{reviewKind}, #{reviewUserId})
+		INSERT INTO REVIEW VALUES(REVIEW_SEQ.NEXTVAL, #{reviewContents}, #{reviewImage}, #{reviewRating}, SYSDATE,NULL, 0, #{reviewTitle}, #{reviewKind}, #{reviewUserId})
 	</insert>
+	<!-- 리뷰 작성 시 카운트 +1 -->
+	<update id="HotelUp" parameterType="int">
+		UPDATE HOTEL_RESERVATION SET HOTELREVIEW=1 WHERE HOTELRESERVENUM=#{reserveNum}
+	</update>
+	<update id="BeautyUp" parameterType="int">
+		UPDATE BEAUTY_RESERVATION SET BEAUTYREVIEW=1 WHERE BEAUTYRESERVENUM=#{reserveNum}
+	</update>
+	<update id="MedicalUp" parameterType="int">
+		UPDATE MEDICAL_RESERVATION SET MEDICALREVIEW=1 WHERE MEDICALRESERVENUM=#{reserveNum}
+	</update>
+	<update id="GoodsUp" parameterType="int">
+		UPDATE GOODS_BUY SET GOODSREVIEW=1 WHERE GOODSBUYNUM=#{reserveNum}
+	</update>
 	<!-- 리뷰 목록 가져오기 전 카운팅 -->
 	<select id="ReviewCount" parameterType="hashMap" resultType="int">
 		SELECT COUNT(*) FROM REVIEW WHERE REVIEWBLIND IS NULL AND REVIEWKIND LIKE '%'||#{reviewKind}||'%' AND (REVIEWTITLE LIKE '%'||#{searchData}||'%' OR REVIEWCONTENTS LIKE '%'||#{searchData}||'%')

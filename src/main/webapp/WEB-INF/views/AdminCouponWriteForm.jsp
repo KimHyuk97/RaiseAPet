@@ -6,7 +6,30 @@
 <meta charset="UTF-8">
 <title>쿠폰 작성 폼</title>
 </head>
-<body>
+<style>
+	table{
+    	margin:0 auto; 
+    	width:70%;
+    }
+    th{
+    	width:30%;
+    	 text-align:center;
+    }
+    th, td{
+    	border-bottom: 1px solid #ddd;
+    	height : 60px;
+		
+    }
+    input{
+    	border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;
+    	height : 30px;
+    	padding: .8em .5em;
+    }
+    button{
+    	float:right;
+    }
+</style>
+<body style="background-color:#eeeeee;">
 	<form action="couponWrite" method="POST">
 		<table>
 			<tr>

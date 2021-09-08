@@ -31,16 +31,16 @@
 	}
 	
 	.img {
-	    width: 700px;
-	    height:700px;
-	    border-radius: 350px; /* 이미지 반크기만큼 반경을 잡기*/
+	    width: 300px;
+	    height:300px;
+	    border-radius: 150px; /* 이미지 반크기만큼 반경을 잡기*/
 	} 
 	
 	.radius-box {
-    	width: 700px;
-    	height: 700px;
+    	width: 300px;
+    	height: 300px;
     	background-image:url("배경이미지경로");
-    	border-radius: 450px; /* 레이어 반크기만큼 반경을 잡기*/    
+    	border-radius: 150px; /* 레이어 반크기만큼 반경을 잡기*/    
     	display: table-cell;
     	vertical-align: middle;
     	color: #ffffff;
@@ -55,14 +55,12 @@
 	}
 	
 	.info{
-		float: right;
 		border: 1px solid #f3d4ff;
 		border-width: thick;
-		width: 750px;
-		height: 450px; 
-		margin-right: 10%;
-		font-size: 25px;
-		padding-left: 2%;
+		width: 650px;
+		height: 380px;
+		font-size: 24px;
+		padding-left: 2.5%;
 	}
 	
 	.popupBtn{
@@ -83,6 +81,7 @@
 		border-radius: 12px;
 	}
 </style>
+<!-- ///////////////////////////////////////////// CSS ////////////////////////////////////////////// -->
 <script type="text/javaScript" src="${pageContext.request.contextPath}/resources/js/jquery-3.5.1.js"></script>
 <!-- 수정 페이지 비밀번호 확인 start -->
 <script>
@@ -140,6 +139,7 @@
 	} 
 </script>
 <!-- 탈퇴 페이지 비밀번호 확인 end -->
+<!-- ///////////////////////////////////////////// script ////////////////////////////////////////////// -->
 </head>
 <header class="all2" style=" height:40%; margin-top: 1%">
 	<div class="middle-menu center-text" style=" height:77%;">
@@ -152,21 +152,13 @@
 	</div>
 </header>
 <body>
-	<div class="all" style="margin-top: 1%">
-		
-		<div class="radius-box" style="position: relative;">
-			<!-- 프로필 -->
-			<img class="img" style="margin-left: 15%" src="resources/memberFile/${sessionScope.loginUser.userImage}"/><br>
-			<!-- 이미지 태그를 사용해서 src에 파일 경로를 설정하고 이름을 설정하면 뜸. -->
-		</div>
-			
-			<!-- 수정 -->
-			<button class="btn" style="margin-left: 15%; margin-top: 0.5%;" onclick="modifyPwCheck()">수정</button>&nbsp;
-			<!-- 탈퇴 -->
-			<button class="btn" onclick="deletePwCheck()">탈퇴</button>
-		
-		<div class="info" style="position: relative; left:2%; bottom: 670px; padding-top: 10%; background-color: #f7f2ff">
-			<!-- 회원 정보 띄우기 -->
+<table style="margin: 0 auto; margin-top: 6.5%;">
+<tr>
+	<td style="text-align:center;"><!-- 프로필 -->
+		<img class="img" src="resources/memberFile/${sessionScope.loginUser.userImage}"/>
+	</td>
+	<td><!-- 회원 정보 띄우기 -->
+		<div class="info" style="background-color: #f7f2ff; line-height: 37px">
 			아이디 : ${sessionScope.loginUser.userId}<br>
 			이름 : ${sessionScope.loginUser.userName}<br>
 			<fmt:parseDate var="parsedDate" value="${sessionScope.loginUser.userBirth}" pattern="yyyy-MM-dd"></fmt:parseDate>
@@ -178,27 +170,41 @@
 			전화번호 : ${sessionScope.loginUser.userPhone}<br>
 			<fmt:formatNumber var="userPoint" value="${sessionScope.loginUser.userPoint}"/> 	
 			포인트 : ${userPoint}<br>
-			<a id="popUpBtnCoupon">쿠폰함</a>(${sessionScope.couponCount})<br><br>
+			<a id="popUpBtnCoupon">쿠폰함</a>(${sessionScope.couponCount})
 		</div>
-		
+			
+	</td></tr>
+
+
+
+	<tr>
+		<td style="width:400px;">
+			<!-- 수정 -->
+			<button class="btn" style="margin-left: 11.5%; margin-top: 3%;" onclick="modifyPwCheck()">수정</button>&nbsp;
+			<!-- 탈퇴 -->
+			<button class="btn" onclick="deletePwCheck()">탈퇴</button>
+		</td>
+		<td>
 			<!-- 결제내역 -->
-		<div style="position: relative; left: 750px; bottom: 40px">
-			<button style="margin-left: 1%" class="popupBtn" id="popUpBtnPayment">결제내역</button>&nbsp;
+			<button style="margin-right: 1%; margin-left: 1%; margin-top: 1.7%;" class="popupBtn" id="popUpBtnPayment">결제내역</button>
 			<!-- 문의내역 -->
-			<button style="margin-left: 1%" class="popupBtn" id="popUpBtnAsk">문의내역</button>&nbsp;
+			<button style="margin-left: 1%; margin-top: 1.7%;" class="popupBtn" id="popUpBtnAsk">문의내역</button>
 			<!-- 장바구니 -->
-			<button style="margin-left: 1%" class="popupBtn" id="popUpBtnBasket">장바구니</button>&nbsp;
+			<button style="margin-left: 1%; margin-top: 1.7%;" class="popupBtn" id="popUpBtnBasket">장바구니</button>
 			<!-- 리뷰내역 -->
-			<button style="margin-left: 1%" class="popupBtn" id="popUpBtnReview">리뷰내역</button>&nbsp;<br>
-		</div>
-	</div>
+			<button style="margin-left: 1%; margin-top: 1.7%;" class="popupBtn" id="popUpBtnReview">리뷰내역</button>
+		</td>
+	</tr>
+</table>
+
 </body>
+<!-- ///////////////////////////////////////////// body ////////////////////////////////////////////// -->
 <!-- 팝업창 띄우기 start -->
 <script>
 	var popUpBtnPayment = document.getElementById("popUpBtnPayment");
 	var mywindowPayment;
 
-	var paymentX = (window.screen.width / 2) - (1300 / 2);
+	var paymentX = (window.screen.width / 2) - (1100 / 2);
 	// &nbsp; 만들 팝업창 좌우 크기의 1/2 만큼 보정값으로 빼주었음
 	
 	var paymentY= (window.screen.height /2) - (700 / 2);
@@ -206,7 +212,7 @@
 
 	// 결제내역
 	popUpBtnPayment.addEventListener("click", function(){
-		mywindowPayment = window.open("memberPaymentList", "mywindowPayment", "width=1300, height=700, left=" + paymentX + ", top=" + paymentY);
+		mywindowPayment = window.open("memberPaymentList", "mywindowPayment", "width=1200, height=700, left=" + paymentX + ", top=" + paymentY);
 	});
 </script>
 
@@ -232,15 +238,15 @@
 	var popUpBtnBasket = document.getElementById("popUpBtnBasket");
 	var mywindowBasket;
 
-	var basketX = (window.screen.width / 2) - (900 / 2);
+	var basketX = (window.screen.width / 2) - (1000 / 2);
 	// &nbsp; 만들 팝업창 좌우 크기의 1/2 만큼 보정값으로 빼주었음
 	
-	var basketY= (window.screen.height /2) - (600 / 2);
+	var basketY= (window.screen.height /2) - (800 / 2);
 	// &nbsp; 만들 팝업창 상하 크기의 1/2 만큼 보정값으로 빼주었음
 
 	// 장바구니
 	popUpBtnBasket.addEventListener("click", function(){
-		mywindowBasket = window.open("memberBasketList", "mywindowBasket", "width=900, height=600, left=" + basketX + ", top=" + basketY);
+		mywindowBasket = window.open("memberBasketList", "mywindowBasket", "width=1000, height=800, left=" + basketX + ", top=" + basketY);
 	});
 </script>
 
@@ -278,4 +284,5 @@
 	});
 </script>
 <!-- 팝업창 띄우기 end -->
+<!-- ///////////////////////////////////////////// script ////////////////////////////////////////////// -->
 </html>

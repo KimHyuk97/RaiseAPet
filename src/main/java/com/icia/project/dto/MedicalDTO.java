@@ -13,7 +13,7 @@ public class MedicalDTO {
 
 	// 예약 정보
 	private String medicalReserveDate, medicalReserveTime, medicalReserveAnimalKind, medicalReserveAnimalNote, 
-					medicalReserveDoctor, medicalReserveUserName, medicalReservePayment,Kind, medicalReserveSubject;
-	private int medicalReserveAnimalAge, medicalReservePrice, medicalReservePoint;
+					medicalReserveDoctor, medicalReserveUserId, medicalReservePayment, medicalReserveSubject;
+	private int medicalReserveAnimalAge, medicalReservePrice, medicalReservePoint, medicalReserveNum;
 	private String kind;
 }

@@ -1,6 +1,6 @@
 package com.icia.project.service;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +10,11 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.multipart.MultipartFile;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import com.icia.project.dao.EventDAO;
-import com.icia.project.dto.CouponDTO;
+
 import com.icia.project.dto.EventCommentDTO;
 import com.icia.project.dto.EventCommentLikeDTO;
 import com.icia.project.dto.EventDTO;
@@ -61,7 +60,7 @@ public class EventService {
 	
 	//쿠폰
 	//쿠폰지급
-	public HashMap<String, Object> EventCouponPayment(HashMap<String, Object> map) {
+	public HashMap<String, String> EventCouponPayment(HashMap<String, String> map) {
 		edao.EventCouponPayment(map);
 		return map;
 	}

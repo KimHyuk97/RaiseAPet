@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.icia.project.dao.HotelDAO;
 import com.icia.project.dto.CouponDTO;
 import com.icia.project.dto.HotelDTO;
+import com.icia.project.dto.MemberDTO;
 import com.icia.project.dto.PageDTO;
 
 @Service
@@ -18,6 +21,8 @@ public class HotelService {
 	ModelAndView mav = new ModelAndView();
 	@Autowired
 	HotelDAO htdao;
+	@Autowired
+	HttpSession session;
 	PageDTO paging = new PageDTO();
 
 	// 호텔 작은방
@@ -56,6 +61,8 @@ public class HotelService {
 	
 	// 호텔예약 온라인결제
 	public int cardPayment(HotelDTO hotel, CouponDTO coupon, int use_point) {
+		MemberDTO member = (MemberDTO)session.getAttribute("loginUser");
+		
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("use_point", use_point);
 		hashMap.put("couponCode",coupon.getCouponCode());
@@ -68,10 +75,17 @@ public class HotelService {
 		if(use_point > 0) { 
 			htdao.use_point(hashMap);
 		}
+		hotel.setHotelUserName(member.getUserName());
+		hotel.setHotelUserId(member.getUserId());
+		hotel.setHotelUserPhone(member.getUserPhone());
 		// 호텔 예약정보 저장
 		int hotelCard = htdao.HotelCard(hotel);
 		// 포인트 적립
 		int result = htdao.hotelPoint(hotel);
+		
+		MemberDTO member2 = htdao.memberSelect(hotel);
+		session.setAttribute("loginUser", member2);
+		
 		return result;
 	}
 	
@@ -80,7 +94,7 @@ public class HotelService {
 		int hotelcashi = htdao.HotelCashi(hotel);
 
 		if (hotelcashi > 0) {
-			mav.setViewName("CashiClere");
+			mav.setViewName("Hotel");
 		}
 		return mav;
 	}

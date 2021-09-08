@@ -322,7 +322,7 @@ public class MemberController {
 	
 	// 카카오 회원가입 api
 	@RequestMapping(value="/join")
-	public String join(@RequestParam("code") String code) {
+	public ModelAndView join(@RequestParam("code") String code) {
 
 		String access_Token = kakao.getAccessTokenJoin(code);
 		
@@ -330,11 +330,13 @@ public class MemberController {
 		
 		// 클라이언트의 이메일이 존재 할 때 세션에 해당 이메일과 토큰 등록
 		if(userInfo.get("email") != null) {
-			session.setAttribute("userKakao", userInfo.get("email"));
+			
+			mav.addObject("kakaoId", userInfo.get("email"));
+			mav.setViewName("MemberJoinForm");
 			session.setAttribute("access_Token", access_Token);
 		}
 		
-		return "MemberJoinForm";
+		return mav;
 	}
 	
 	// 네이버 아이디로 로그인(네이버 아이디로 사이트 가입 후 로그인)
@@ -509,7 +511,6 @@ public class MemberController {
 	@RequestMapping(value="/couponCount", method=RequestMethod.POST)
 	public @ResponseBody String CouponCount() {
 	
-		System.out.println("1");
 		String resultMsg = mSvc.couponCount();
 			
 		return resultMsg;
@@ -650,44 +651,6 @@ public class MemberController {
 		return resultMsg;
 	}
 	
-	// ------------------------ 결제내역 취소 ------------------------------
-	
-	// 호텔 결제내역 취소
-	@RequestMapping(value="hotelPaymentDelete")
-	public @ResponseBody String HotelPaymentDelete(@RequestParam("hotelCode") String hotelCode) {	
-	
-		String resultMsg = mSvc.hotelPaymentDelete(hotelCode);
-		
-		return resultMsg;
-	}
-	
-	// 병원 결제내역 취소
-	@RequestMapping(value="medicalPaymentDelete")
-	public @ResponseBody String MedicalPaymentDelete(@RequestParam("medicalReserveDate") String medicalReserveDate) {	
-	
-		String resultMsg = mSvc.medicalPaymentDelete(medicalReserveDate);
-		
-		return resultMsg;
-	}
-	
-	// 미용 결제내역 취소
-	@RequestMapping(value="beautyPaymentDelete")
-	public @ResponseBody String BeautyPaymentDelete(@RequestParam("beautyReserveDate") String beautyReserveDate) {	
-	
-		String resultMsg = mSvc.beautyPaymentDelete(beautyReserveDate);
-		
-		return resultMsg;
-	}
-	
-	// 용품 결제내역 취소
-	@RequestMapping(value="goodsPaymentDelete")
-	public @ResponseBody String GoodsPaymentDelete(@RequestParam("buyGoodsNum") String buyGoodsNum) {	
-	
-		String resultMsg = mSvc.goodsPaymentDelete(buyGoodsNum);
-		
-		return resultMsg;
-	}
-	
 	// -------------------------- 장바구니 여러 개 결제 -----------------------------
 	
 	// 여러 개 선택하여 결제 (장바구니)
@@ -807,7 +770,43 @@ public class MemberController {
 			}
 		}
 		
-		System.out.println("resultMsg : " + resultMsg);
+		return resultMsg;
+	}
+	
+	// -------------------------- 리뷰 작성 했는 지 확인 -------------------------------------
+	
+	// 호텔 리뷰 
+	@RequestMapping(value="hotelReviewCheck")
+	public @ResponseBody String HotelReviewCheck(@RequestParam("hotelReserveNum") int hotelReserveNum) {
+		
+		String resultMsg = mSvc.hotelReviewCheck(hotelReserveNum);
+		
+		return resultMsg;
+	}
+	
+	// 병원 리뷰 
+	@RequestMapping(value="medicalReviewCheck")
+	public @ResponseBody String MedicalReviewCheck(@RequestParam("medicalReserveNum") int medicalReserveNum) {
+		
+		String resultMsg = mSvc.medicalReviewCheck(medicalReserveNum);
+		
+		return resultMsg;
+	}
+	
+	// 미용 리뷰 
+	@RequestMapping(value="beautyReviewCheck")
+	public @ResponseBody String BeautyReviewCheck(@RequestParam("beautyReserveNum") int beautyReserveNum) {
+		
+		String resultMsg = mSvc.beautyReviewCheck(beautyReserveNum);
+		
+		return resultMsg;
+	}
+	
+	// 용품 리뷰 
+	@RequestMapping(value="goodsReviewCheck")
+	public @ResponseBody String GoodsReviewCheck(@RequestParam("goodsBuyNum") int goodsBuyNum) {
+		
+		String resultMsg = mSvc.goodsReviewCheck(goodsBuyNum);
 		
 		return resultMsg;
 	}

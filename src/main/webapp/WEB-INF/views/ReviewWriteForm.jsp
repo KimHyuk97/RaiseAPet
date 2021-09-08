@@ -4,17 +4,35 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+	table {
+	border-collapse:collapse;
+	}
+</style>
+
+	<!-- Font -->
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+
+
+	<!-- Stylesheets -->
+
+
+	<link href="resources/01-homepage/css/styles.css" rel="stylesheet">
+	<link href="resources/01-homepage/css/responsive.css" rel="stylesheet">
 <meta charset="UTF-8">
 <title>리뷰 작성 폼</title>
+
 </head>
 <body>
-	<table>
-		<form action = "reviewWrite" name="review" method="POST" enctype="multipart/form-data">
+<form action = "reviewWrite" name="review" method="POST" enctype="multipart/form-data">
+	<table border="1" style="border : 2px solid #d3cfce; height : 500px; width:700px;">
+		
 			<c:if test="${not empty hotelView }">
 				<tr>
 					<th>리뷰 제목</th>
-					<td>(리뷰)${hotleView.hotelName}</td>
-					<input type="hidden" value="(리뷰)${hotleView.hotelName}" name="reviewTitle"/>
+					<td>(리뷰)${hotelView.hotelRoomName}</td>
+					<input type="hidden" value="(리뷰)${hotelView.hotelRoomName}" name="reviewTitle"/>
 				</tr>
 				<tr>
 					<th>리뷰 종류</th>
@@ -61,32 +79,34 @@
 			<tr>
 				<th>리뷰 평점</th>
 				<td>
-					<table>
-						<tr>
-							<input type="radio" value="1" name="reviewRating"/>
-							<input type="radio" value="2" name="reviewRating"/>
-							<input type="radio" value="3" name="reviewRating"/>
-							<input type="radio" value="4" name="reviewRating"/>
-							<input type="radio" value="5" name="reviewRating"/>
+					<table style="border-collapse:collapse;">
+					<tr><img src="resources/reviewFile/1.png" style="width:21px; height:21px;"/><img src="resources/reviewFile/2.png"style="width:21px; height:21px;"/><img src="resources/reviewFile/3.png"style="width:21px; height:21px;"/><img src="resources/reviewFile/4.png"style="width:21px; height:21px;"/><img src="resources/reviewFile/5.png"style="width:21px; height:21px;"/></tr>
+						<br>
+						<tr >
+							<input type="radio" value="1" name="reviewRating"/> 
+							<input type="radio" value="2" name="reviewRating"/> 
+							<input type="radio" value="3" name="reviewRating"/>  
+							<input type="radio" value="4" name="reviewRating"/> 
+							<input type="radio" value="5" name="reviewRating"/>  
 						</tr>
-						<tr>1 / 2 / 3 / 4 / 5</tr>
 					</table>
 					</td>
 			</tr>
 			<tr>
 				<th>리뷰 사진</th>
-				<td><input type="file" name="reviewImage"/></td>
+				<td><input type="file" name="reviewImageFile"/></td>
 			</tr>
 			<tr>
 				<th>리뷰 내용</th>
-				<td><textarea name="reviewContents"></textarea></td>
+				<td><textarea rows="15" cols="70" name="reviewContents"></textarea></td>
 			</tr>
-			<input type="hidden" name="reviewUserId" value="${sessionScope.loginUser.userId }"/>
-		</form>
+			<input type="hidden" name="reserveNum" value="${reserveNum }"/>
+		
 			<tr>
 				<td colspan="2"><button onclick="reviewSubmit()">작성</button><button onclick="reviewCancel()">취소</button></td>
 			</tr>
 	</table>
+	</form>
 </body>
 <script>
 	function reviewSubmit(){

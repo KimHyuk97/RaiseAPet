@@ -6,8 +6,32 @@
 <meta charset="UTF-8">
 <title>문의글 답변 폼</title>
 </head>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>z
-<body>
+<style>
+	table{
+    	margin:0 auto; 
+    	width:100%;
+    }
+    th{
+    	width:50%;
+    	 text-align:center;
+    }
+    th, td{
+    	border-bottom: 1px solid #ddd;
+    	height : 40px;
+    	
+		
+    }
+    input{
+    	border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;
+    	height : 30px;
+    	padding: .8em .5em;
+    }
+    button{
+    	float:right;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<body style="background-color: #eeeeee;">
 <table>
 	<tr>
 		<th>문의 글 번호</th><td>${goods.askNum }</td>
@@ -18,7 +42,7 @@
 	<tr>
 		<th>답변내용</th><td><textarea id="askAnswer" rows="10" cols="40"></textarea></td>
 	</tr>
-	<tr><td colspan="2"><button onclick="answerSubmit(${goods.askNum})">작성</button><button onclick="cancel()">취소</button></td></tr>
+	<tr><td colspan="2"><button onclick="cancel()">취소</button><button onclick="answerSubmit(${goods.askNum})">작성</button></td></tr>
 </table> 
 </body>
 <script>

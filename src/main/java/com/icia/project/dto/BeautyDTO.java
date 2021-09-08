@@ -12,6 +12,6 @@ public class BeautyDTO {
 	private MultipartFile designerImageFile;
 	
 	// 예약 정보
-	private String beautyReserveDate, beautyReserveTime, beautyReserveAnimalKind, beautyReserveAnimalNote, beautyReserveSubject, beautyReserveDesigner, beautyReserveUserName, beautyReservePayment, kind;
-	private int beautyReserveAnimalAge, beautyReservePrice, beautyReservePoint;
+	private String beautyReserveDate, beautyReserveTime, beautyReserveAnimalKind, beautyReserveAnimalNote, beautyReserveSubject, beautyReserveDesigner, beautyReserveUserId, beautyReservePayment, kind;
+	private int beautyReserveAnimalAge, beautyReservePrice, beautyReservePoint, beautyReserveNum;
 }

@@ -13,6 +13,45 @@
 .main-menu-li:hover {
 	font-color: #DDC3F7;
 }
+#content{
+
+	width:50%;
+	max-width: 1500px;
+	min-width: 800px;
+	margin:0 auto;
+}
+.notice{
+     display: list-item;
+     padding-top: 15px; 
+}
+.dogbtn{
+	width: 70px;
+	margin-left: 65px;
+	font-size:15px;
+	height:35px;
+	background-color:white;
+	color:black;
+	border-radius: 7px;
+}
+
+.dogbtn:hover{
+	color: #DDC3F7;
+	border-radius: 7px;
+	cursor: pointer;
+}
+
+.bttn button{
+	border:1px solid skyblue;
+	background-color:rgda(0,0,0,0);
+	color:skyblue;
+	padding:5px;
+}
+.bttn button:hover{
+	border:1px solid #fff;
+	background-color:skyblue;
+	color:#fff;
+	padding:5px;
+}
 </style>
 
 
@@ -30,37 +69,57 @@
 <link href="resources/01-homepage/css/responsive.css" rel="stylesheet">
 
 </head>
+<script type="text/javaScript" src="${pageContext.request.contextPath}/resources/js/jquery-3.5.1.js"></script>
+
+<!-- 추가 -->
+<script>
+	function couponCount(){
+
+		$.ajax({
+			type : "POST",
+			url : "couponCount",
+
+			// 성공 시
+			success : function(data){
+				if(data=="OK"){
+					location.href="memberMyPage";
+				}else{
+					alert("실패");
+				}
+			},
+
+			// 실패 시
+			error : function(){
+				alert('couponCount 함수 통신 실패');
+				}
+		});
+	}
+</script>
+<!-- 쿠폰함 갯수 end -->
 <body>
 
 	<header style="height: 40%;">
 
-		<div class="middle-menu center-text" style="height: 77%;">
-			<div style="width: 20%; height: 25px; float: right;">
-				<c:if test="${empty sessionScope.loginUser }">
-					<a href="memberJoinForm"><img src="resources/svg/add.svg"
-						alt="Join Image" style="width: 25px; height: 25px; float: right;"></a>
-					<a href="memberLoginForm"><img src="resources/svg/lock.svg"
-						alt="Login Image" style="width: 25px; height: 25px; float: right;"></a>
-					<a href="reviewList">리뷰 리스트</a>
-				</c:if>
-				<c:if test="${not empty sessionScope.loginUser }">
-					<a href=""><img src="resources/svg/cart.svg" alt="Cart Image"
-						style="width: 25px; height: 25px; float: right;"></a>
-					<a href="myPage"><img src="resources/svg/user.svg"
-						alt="MyPage Image"
-						style="width: 25px; height: 25px; float: right;"></a>
-					<a href="memberLogout"><img src="resources/svg/lock-open.svg"
-						alt="Logout Image"
-						style="width: 25px; height: 25px; float: right;"></a>
-					<a href="hotelManagement">어드민 관리 페이지</a>
-				</c:if>
-			</div>
-			<div style="height: 100%; width: 39%; margin: 0 auto;">
-				<a href="./" class="logo" style="height: 100%; padding: 0;"> <img
-					src="resources/images/logo.png" alt="Logo Image"
-					style="float: center; height: 100%;">
+		<div class="middle-menu center-text" style=" height:77%;">
+				<div style="width:20%; height:25px; float:right;">	
+					<c:if test="${empty sessionScope.loginUser }">
+						<a href="memberJoinForm"><img src="resources/svg/add.svg" alt="Join Image" style="width:25px; height:25px; float:right;"></a>
+						<a href="memberLoginForm"><img src="resources/svg/lock.svg" alt="Login Image" style="width:25px; height:25px; float:right;"></a>
+						<a href="reviewList">리뷰 리스트</a>
+					</c:if>
+					<c:if test="${not empty sessionScope.loginUser }">
+					<!-- 추가 -->
+						<a id="popUpBtnBasket"><img src="resources/svg/cart.svg" alt="Cart Image" style="width:25px; height:25px; float:right;"></a>
+						<!-- 추가 -->
+						<a onclick="couponCount()"><img src="resources/svg/user.svg" alt="MyPage Image" style="width:25px; height:25px; float:right;"></a>
+						<a href="memberLogout"><img src="resources/svg/lock-open.svg" alt="Logout Image" style="width:25px; height:25px; float:right;"></a>
+					</c:if>
+				</div>
+			<div style="height:100%;  width:39%; margin:0 auto;">
+				<a href="./" class="logo" style=" height: 100%; padding:0;">
+					<img src="resources/images/logo.png" alt="Logo Image" style="float:center; height : 100%;">
 				</a>
-			</div>
+			</div>	
 		</div>
 
 
@@ -72,11 +131,11 @@
 
 			<ul class="main-menu visible-on-click" id="main-menu">
 				<li class="main-menu-li"><a href="hotelList">HOTEL</a></li>
-				<li class="main-menu-li"><a href="medicalList">MEDICAL</a></li>
-				<li class="main-menu-li"><a href="beautyList">BEAUTY</a></li>
+				<li class="main-menu-li"><a href="medical">MEDICAL</a></li>
+				<li class="main-menu-li"><a href="beauty">BEAUTY</a></li>
 				<li class="main-menu-li"><a href="goodsList">GOODS</a></li>
 				<li class="main-menu-li"><a href="educationList">EDUCATION</a></li>
-				<li class="main-menu-li"><a href="reviewlist">REVIEW</a></li>
+				<li class="main-menu-li"><a href="reviewList">REVIEW</a></li>
 				<li class="main-menu-li"><a href="eventList">EVENT</a></li>
 				<li class="main-menu-li"><a href="noticeList">NOTICE</a></li>
 			</ul>
@@ -92,66 +151,31 @@
 
 
 	<!--/////////////////////////////////////// 값이 바뀔 구간 /////////////////////////////////////////////////-->
-	<div id="content">
-		<div>
-			<ul class="" id="main-menu">
-				<li class=""><button id="HOTEL" onclick="HOTEL()">기본사항</button></li>
-				<li class=""><button id="MEDICAL" onclick="MEDICAL()">주의사항</button></li>
-				<li class=""><button id="BEAUTY" onclick="BEAUTY()">예방접종</button></li>
-				<li class=""><button id="GOODS" onclick="GOODS()">기본용품</button></li>
+	<div id="content" style="margin:0 auto; height:1000px; display: block;">
+		<div style="width:15%; float:left; height: 100%; text-align: center; background-color: gray;">
+			<ul class="bttn" id="main-menu" style="dispaly:block; padding-bottom: 40px;">
+				<li class="notice"><button  onclick="location.href='noticeList'" style="margin:10px;line-height: 100%;">제휴사</button></li>
+				<li class="notice"><button  onclick="location.href='DOG'" style="margin:10px;line-height: 100%;">강아지</button></li>
+				<li class="notice"><button  onclick="location.href='CAT'" style="margin:10px;line-height: 100%;">고양이</button></li>
 			</ul>
 		</div>
-		<div>
-		<ul class="" id="main-menu">
-				<li class=""><button  onclick="location.href='noticeList'">제휴사</button></li>
-				<li class=""><button  onclick="location.href='DOG'">강아지</button></li>
-				<li class=""><button  onclick="location.href='CAT'">고양이</button></li>
+		<div style="width: 80%;">
+			<ul style="float:right; padding-bottom: 40px; padding-top: 40px" >
+				<li class=""><button class="dogbtn" id="HOTEL" onclick="HOTEL()">기본사항</button></li>
+				<li class=""><button class="dogbtn" id="MEDICAL" onclick="MEDICAL()">기본용품</button></li>
+				<li class=""><button class="dogbtn" id="BEAUTY" onclick="BEAUTY()">예방접종</button></li>
+				<li class=""><button class="dogbtn" id="GOODS" onclick="GOODS()">행동수칙</button></li>
 			</ul>
 		</div>
-		<div><p class="HOTEL"><img src="resources/images/병원사진1.jpg" alt="동물병원" width="60%" height="500px">안녕하세요 호텔입니다.</p></div>
-		<div><p class="MEDICAL"><img src="resources/images/병원사진2.jpg" alt="동물병원" width="60%" height="500px">안녕하세요 건국본동물병원입니다~! 저희 병원에서는 10년이상 경력의 원장님들이
-			24시간진료를 하고 있습니다 . 각 과별 전문진료 및 매년 1000여건의 수술을 실시하는 인천 최대의 전문병원, 건국 본
-			동물병원입니다!</p></div>
-		<div><p class="BEAUTY"><img src="resources/images/병원사진3.jpg" alt="동물병원" width="60%" height="500px">안녕하세요 미용실</p></div>
-		<div><p class="GOODS"><img src="resources/images/병원사진4.jpg" alt="동물병원" width="60%" height="500px">안녕하세요 용품점</p></div>
+		<div style="float:right; width:80%;margin-left: 5%
+		">
+			<p class="HOTEL"><img src="resources/images/dog_기본사항.png" alt="기본수칙" height= "700px"></p>
+			<p class="MEDICAL"><img src="resources/images/dog_기본용품.png" alt="주의사항" height= "700px"></p>
+			<p class="BEAUTY"><img src="resources/images/dog_예방접종.png" alt="예방접종" height= "700px"></p>
+			<p class="GOODS"><img src="resources/images/dog_행동수칙.png" alt="필요용품" height= "700px"></p>
+		</div>
 	</div>
 	<!--/////////////////////////////////////// 값이 바뀔 구간 끝 /////////////////////////////////////////////////-->
-
-	<!-- 여기부터 하단 내용 -->
-	<section class="footer-instagram-area">
-
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<h5 class="title">
-						<b class="light-color">Follow me &copy; instagram</b>
-					</h5>
-				</div>
-				<!-- col-lg-4 -->
-			</div>
-			<!-- row -->
-		</div>
-		<!-- container -->
-
-		<ul class="instagram">
-			<li><a href="#"><img src="images/instragram-1-300x400.jpg"
-					alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-2-300x400.jpg"
-					alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-3-300x400.jpg"
-					alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-4-300x400.jpg"
-					alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-5-300x400.jpg"
-					alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-6-300x400.jpg"
-					alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-7-300x400.jpg"
-					alt="Instagram Image"></a></li>
-		</ul>
-	</section>
-	<!-- section -->
-
 
 	<footer>
 		<div class="container">

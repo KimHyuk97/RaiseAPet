@@ -12,5 +12,7 @@ public class EducationDTO {
 	private int eduLike, eduHit, eduNum, likeEduNum;
 	private MultipartFile eduImageFile;
 	private String kind;
+	private String eduAnimalKind;
+	private String[] eduAnimalKinds;
 
 }

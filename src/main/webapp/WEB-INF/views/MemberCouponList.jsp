@@ -11,9 +11,14 @@
 	table, tr, td, th{
 		border-collapse: collapse;
 		margin: 0 auto;
-		width : 460px;
 		border-width : medium;
 		border : 1px solid #474747;
+		table-layout: fixed;
+		/* 
+			테이블의 크기 지정 및 고정 시켜야 할 경우에 사용한다
+			td에서 문자열을 자르거나 숨길 수 있다.
+		 */
+		border-color: gray;
 	}
 	
 	th{
@@ -34,7 +39,12 @@
 	header{
 		margin-top: 11%
 	}
+	
+	.contents{
+		padding: 0 10px 0 10px;
+	}
 </style>
+<!-- ///////////////////////////////////////////// CSS ////////////////////////////////////////////// -->
 </head>
 <header>
 	<div style="height:100%;  width:21%; margin:0 auto;">
@@ -45,7 +55,7 @@
 </header>
 <body>
 	<div class="all">
-		<table>
+		<table style="width: 700px;">
 			<tr class="th">
 				<th>코드</th>
 				<th>이름</th>
@@ -60,11 +70,15 @@
 					<c:forEach var="memberCouponList" items="${memberCouponList}">
 						<tr>
 							<td>${memberCouponList.couponCode}</td>
-							<td>${memberCouponList.couponName}</td>
+							<td style="overflow: hidden;
+							text-overflow: ellipsis; 
+							white-space: nowrap;" class="contents">${memberCouponList.couponName}</td>
 							<fmt:parseDate var="couponDate" value="${memberCouponList.couponDate}" pattern="YYYY-mm-dd"></fmt:parseDate>
 							<fmt:formatDate var="newFormatted" value="${couponDate}" pattern="YYYY-mm-dd"/> 
 							<td>${newFormatted}</td>
-							<td>${memberCouponList.couponContents}</td>
+							<td style="overflow: hidden;
+							text-overflow: ellipsis; 
+							white-space: nowrap;" class="contents">${memberCouponList.couponContents}</td>
 							<fmt:formatNumber var="couponSale" value="${memberCouponList.couponSale}"/> 	
 							<td>${couponSale}</td>
 						</tr>
@@ -72,7 +86,7 @@
 				</c:when>
 				
 				<c:otherwise>
-					<tr>
+					<tr style="height: 100px">
 						<td colspan="5">기록이 없습니다.</td>
 					</tr>
 				</c:otherwise>
@@ -80,4 +94,5 @@
 		</table>
 	</div>
 </body>
+<!-- ///////////////////////////////////////////// body ////////////////////////////////////////////// -->
 </html>

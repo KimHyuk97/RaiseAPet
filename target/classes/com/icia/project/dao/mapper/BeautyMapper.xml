@@ -7,7 +7,7 @@
    	SELECT * FROM BEAUTY_DESIGNER
   </select>
   
-  <!-- 미용사 리스트(ajax) -->
+  <!-- 디자이너 리스트 -->
   <select id="designerInformation" resultType="beauty" parameterType="beauty">
    	SELECT * FROM BEAUTY_DESIGNER WHERE DESIGNERCODE = #{designerCode}
   </select> 
@@ -21,7 +21,7 @@
   <insert id="beautyReservation" parameterType="beauty">
   	INSERT INTO 
   	BEAUTY_RESERVATION
-  	VALUES(#{beautyReserveDate},#{beautyReserveTime},#{beautyReserveAnimalKind},#{beautyReserveAnimalAge},#{beautyReserveAnimalNote},#{beautyReserveSubject},#{beautyReserveDesigner},#{beautyReserveUserName},#{beautyReservePrice},#{beautyReservePrice}*0.005,#{beautyReservePayment})
+  	VALUES(BEAUTY_RESERVE_SEQ.nextVal,#{beautyReserveDate},#{beautyReserveTime},#{beautyReserveAnimalKind},#{beautyReserveAnimalAge},#{beautyReserveAnimalNote},#{beautyReserveSubject},#{beautyReserveDesigner},#{beautyReserveUserId},#{beautyReservePrice},#{beautyReservePrice}*0.05,#{beautyReservePayment},0)
   </insert>
   
   <!--쿠폰사용-->
@@ -38,8 +38,11 @@
   <!--포인트적립-->
   <update id="memberAddpoint" parameterType="beauty">
   	UPDATE MEMBERS
-	SET USERPOINT = USERPOINT + (#{beautyReservePrice}*0.005)
-	WHERE USERID = #{beautyReserveUserName}
+	SET USERPOINT = USERPOINT + (#{beautyReservePrice}*0.05)
+	WHERE USERID = #{beautyReserveUserId}
   </update>
   
+  <select id="memberSelect" parameterType="beauty" resultType="member">
+  	SELECT * FROM MEMBERS WHERE USERID = #{beautyReserveUserId}
+  </select>
   </mapper>

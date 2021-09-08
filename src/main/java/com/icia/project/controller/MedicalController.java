@@ -43,9 +43,9 @@ public class MedicalController {
 
 	// 의사 정보
 	@RequestMapping(value = "/doctorInformation", method = RequestMethod.GET)
-	public @ResponseBody MedicalDTO doctorInformation(@ModelAttribute MedicalDTO medical) {
-		md = medicalSvc.DoctorInformation(medical);
-		return md;
+	public ModelAndView doctorInformation(@ModelAttribute MedicalDTO medical) {
+		mav = medicalSvc.DoctorInformation(medical);
+		return mav;
 	}
 
 	// 예약페이지

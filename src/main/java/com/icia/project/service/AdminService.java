@@ -75,6 +75,7 @@ public class AdminService {
                 e.printStackTrace();
             }
         }
+        
 		adminDAO.hotelBoardWrite(hotel);
 		mav.setViewName("redirect:/hotelManagement");
 		return mav;
@@ -95,7 +96,10 @@ public class AdminService {
 	}
 	// 호텔 방 수정 처리
 	public ModelAndView hotelBoardModifyProcess(HotelDTO hotel, List<MultipartFile> fileList) throws IllegalStateException, IOException {
-		// 게시글 수정 전 서버에 저장된 사진 삭제
+		if(hotel.getHotelRoomImageFile().isEmpty()) { 
+			adminDAO.hotelBoardModifyProcess(hotel);
+		} else{
+			// 게시글 수정 전 서버에 저장된 사진 삭제
 				HotelDTO hotelResult=adminDAO.hotelBoardView(hotel.getHotelCode());
 				String deletePath = "";
 				deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/hotelFile/"+hotelResult.getHotelRoomImage1(); // 삭제할 파일의 경로
@@ -123,35 +127,36 @@ public class AdminService {
 				if(file.exists() == true){
 					file.delete();
 				}
+			//파일 저장 경로
+	        String path = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/hotelFile/"+date.format(time)+"ㅡ";
+	
+	        for (MultipartFile mf : fileList) {
+	            String originFileName = mf.getOriginalFilename(); // 원본 파일 명
+	            String safeFile = path  + originFileName;
+	            try {
+	                mf.transferTo(new File(safeFile));
+					  if(fileList.get(0).getOriginalFilename().equals(originFileName)) {
+						  hotel.setHotelRoomImage1(date.format(time)+"ㅡ"+originFileName);
+					  } else if(fileList.get(1).getOriginalFilename().equals(originFileName)) {
+						  hotel.setHotelRoomImage2(date.format(time)+"ㅡ"+originFileName);
+					  } else if(fileList.get(2).getOriginalFilename().equals(originFileName)) {
+						  hotel.setHotelRoomImage3(date.format(time)+"ㅡ"+originFileName);
+					  } else if(fileList.get(3).getOriginalFilename().equals(originFileName)) {
+						  hotel.setHotelRoomImage4(date.format(time)+"ㅡ"+originFileName);
+					  } else if(fileList.get(4).getOriginalFilename().equals(originFileName)) {
+							  hotel.setHotelRoomImage5(date.format(time)+"ㅡ"+originFileName);
+					  } 
+	            } catch (IllegalStateException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+	            } catch (IOException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+	            }
+	        }
+	        adminDAO.hotelBoardModifyProcess(hotel);
+		}
 		
-		//파일 저장 경로
-        String path = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/hotelFile/"+date.format(time)+"ㅡ";
-
-        for (MultipartFile mf : fileList) {
-            String originFileName = mf.getOriginalFilename(); // 원본 파일 명
-            String safeFile = path  + originFileName;
-            try {
-                mf.transferTo(new File(safeFile));
-				  if(fileList.get(0).getOriginalFilename().equals(originFileName)) {
-					  hotel.setHotelRoomImage1(date.format(time)+"ㅡ"+originFileName);
-				  } else if(fileList.get(1).getOriginalFilename().equals(originFileName)) {
-					  hotel.setHotelRoomImage2(date.format(time)+"ㅡ"+originFileName);
-				  } else if(fileList.get(2).getOriginalFilename().equals(originFileName)) {
-					  hotel.setHotelRoomImage3(date.format(time)+"ㅡ"+originFileName);
-				  } else if(fileList.get(3).getOriginalFilename().equals(originFileName)) {
-					  hotel.setHotelRoomImage4(date.format(time)+"ㅡ"+originFileName);
-				  } else if(fileList.get(4).getOriginalFilename().equals(originFileName)) {
-						  hotel.setHotelRoomImage5(date.format(time)+"ㅡ"+originFileName);
-				  } 
-            } catch (IllegalStateException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-		adminDAO.hotelBoardModifyProcess(hotel);
 		mav.setViewName("redirect:/hotelBoardView?hotelCode="+hotel.getHotelCode());
 		return mav;
 	}
@@ -196,7 +201,6 @@ public class AdminService {
 	public ModelAndView beautyManagement() {
 		List<BeautyDTO> beautyResult = adminDAO.beautyManagement();
 		mav.addObject("management", beautyResult);
-		System.out.println("beauty check : "+beautyResult);
 		mav.setViewName("BoardManagement");
 		return mav;
 	}
@@ -234,21 +238,22 @@ public class AdminService {
 	}
 	// 미용사 수정 처리
 	public ModelAndView beautyBoardModifyProcess(BeautyDTO beauty) throws IllegalStateException, IOException {
-		MultipartFile beautyFile = beauty.getDesignerImageFile();
-		
-		String fileName = date.format(time)+"ㅡ"+beautyFile.getOriginalFilename();
-		
-		// 파일 저장 경로
-		String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/beautyFile/"+fileName;
-		
-		if(!beautyFile.isEmpty()) {
-			beautyFile.transferTo(new File(savePath));
+		if(!beauty.getDesignerImageFile().isEmpty()) {
+			MultipartFile beautyFile = beauty.getDesignerImageFile();
+			
+			String fileName = date.format(time)+"ㅡ"+beautyFile.getOriginalFilename();
+			
+			// 파일 저장 경로
+			String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/beautyFile/"+fileName;
+			
+			if(!beautyFile.isEmpty()) {
+				beautyFile.transferTo(new File(savePath));
+			}
+			beauty.setDesignerImage(fileName);
 		}
-		beauty.setDesignerImage(fileName);
 		
 		adminDAO.beautyBoardModifyProcess(beauty);
-		
-		System.out.println("designerCode : "+beauty.getDesignerCode());
+
 		mav.setViewName("redirect:/beautyBoardView?designerCode="+beauty.getDesignerCode());
 		return mav;
 	}
@@ -278,18 +283,19 @@ public class AdminService {
 	}
 	//의사 작성
 	public ModelAndView medicalBoardWrite(MedicalDTO medical) throws IllegalStateException, IOException {
-		MultipartFile medicalFile = medical.getDoctorImageFile();
 		
-		String fileName = date.format(time)+"ㅡ"+medicalFile.getOriginalFilename();
-		
-		// 파일 저장 경로
-		String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/medicalFile/"+fileName;
-		
-		if(!medicalFile.isEmpty()) {
-			medicalFile.transferTo(new File(savePath));
-		}
-		medical.setDoctorImage(fileName);
-		
+			MultipartFile medicalFile = medical.getDoctorImageFile();
+			
+			String fileName = date.format(time)+"ㅡ"+medicalFile.getOriginalFilename();
+			
+			// 파일 저장 경로
+			String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/medicalFile/"+fileName;
+			
+			if(!medicalFile.isEmpty()) {
+				medicalFile.transferTo(new File(savePath));
+			}
+			medical.setDoctorImage(fileName);
+
 		adminDAO.medicalBoardWrite(medical);
 		mav.setViewName("redirect:/medicalManagement");
 		return mav;
@@ -310,18 +316,19 @@ public class AdminService {
 	}
 	//의사 수정 처리
 	public ModelAndView medicalBoardModifyProcess(MedicalDTO medical) throws IllegalStateException, IOException {
-		MultipartFile medicalFile = medical.getDoctorImageFile();
-		
-		String fileName = date.format(time)+"ㅡ"+medicalFile.getOriginalFilename();
-		
-		// 파일 저장 경로
-		String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/medicalFile/"+fileName;
-		
-		if(!medicalFile.isEmpty()) {
-			medicalFile.transferTo(new File(savePath));
+		if(!medical.getDoctorImageFile().isEmpty()) {
+			MultipartFile medicalFile = medical.getDoctorImageFile();
+			
+			String fileName = date.format(time)+"ㅡ"+medicalFile.getOriginalFilename();
+			
+			// 파일 저장 경로
+			String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/medicalFile/"+fileName;
+			
+			if(!medicalFile.isEmpty()) {
+				medicalFile.transferTo(new File(savePath));
+			}
+			medical.setDoctorImage(fileName);
 		}
-		medical.setDoctorImage(fileName);
-		
 		adminDAO.medicalBoardModifyProcess(medical);
 		mav.setViewName("redirect:/medicalBoardView?doctorCode="+medical.getDoctorCode());
 		return mav;
@@ -343,8 +350,36 @@ public class AdminService {
 	}
 	/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
 	//교육 목록
-	public ModelAndView educationManagement() {
-		List<EducationDTO> educationResult = adminDAO.educationManagement();
+	public ModelAndView educationManagement(int page, String eduAnimalKind) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("eduAnimalKind", eduAnimalKind);
+		// 페이징처리에 사용될 글 개수 세기	
+		int listCount = adminDAO.educationCount(eduAnimalKind);
+		mav.addObject("eduAnimalKind",eduAnimalKind);
+		 
+		int startRow = (page - 1) * 15 + 1;
+		int endRow = page * 15;
+		int maxPage = (int) (Math.ceil((double) listCount / 15));	// ceil : 값보다 큰 정수를 찾는 것.
+		int startPage = (((int) (Math.ceil((double) page / BLOCK_LIMIT))) - 1) * BLOCK_LIMIT + 1;
+		int endPage = startPage + BLOCK_LIMIT - 1;
+		if (endPage > maxPage) {
+			endPage = maxPage;
+		}
+		paging.setEndRow(endRow);
+		paging.setStartRow(startRow);
+		paging.setEndPage(endPage);
+		paging.setPage(page);
+		paging.setStartPage(startPage);
+		paging.setMaxPage(maxPage);
+						
+		mav.addObject("paging", paging);
+		
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		
+		//글 목록 불러오기
+		List<EducationDTO> educationResult = educationResult = adminDAO.educationManagement(map);
+		
 		mav.addObject("management", educationResult);
 		mav.setViewName("BoardManagement");
 		return mav;
@@ -363,6 +398,17 @@ public class AdminService {
 		}
 		education.setEduImage(fileName);
 		
+		//교육 할 수 있는 동물 종류
+		String animalKind="";
+			for(int i=0; i<education.getEduAnimalKinds().length; i++) {
+				animalKind += education.getEduAnimalKinds()[i];
+				for(int j=0; j<education.getEduAnimalKinds().length-1; j++) {
+					animalKind += ", ";
+				}
+			}
+		education.setEduAnimalKind(animalKind);
+		
+		
 		adminDAO.educationBoardWrite(education);
 		mav.setViewName("redirect:/educationManagement");
 		return mav;
@@ -377,23 +423,35 @@ public class AdminService {
 	//교육 수정 전 정보 가져오기
 	public ModelAndView educationBoardModify(int eduNum) {
 		EducationDTO educationResult = adminDAO.educationBoardView(eduNum);
+		educationResult.setEduAnimalKinds(educationResult.getEduAnimalKind().split(", "));
 		mav.addObject("educationView", educationResult);
 		mav.setViewName("AdminEducationModifyForm");
 		return mav;
 	}
 	//교육 수정 처리
 	public ModelAndView educationBoardModifyProcess(EducationDTO education) throws IllegalStateException, IOException {
-		MultipartFile educationFile = education.getEduImageFile();
-		
-		String fileName = date.format(time)+"ㅡ"+educationFile.getOriginalFilename();
-		
-		// 파일 저장 경로
-		String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/educationFile/"+fileName;
-		
-		if(!educationFile.isEmpty()) {
-			educationFile.transferTo(new File(savePath));
+		if(!education.getEduImageFile().isEmpty()) {
+			MultipartFile educationFile = education.getEduImageFile();
+			String fileName = date.format(time)+"ㅡ"+educationFile.getOriginalFilename();
+			
+			// 파일 저장 경로
+			String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/educationFile/"+fileName;
+			
+			if(!educationFile.isEmpty()) {
+				educationFile.transferTo(new File(savePath));
+			}
+			education.setEduImage(fileName);
 		}
-		education.setEduImage(fileName);
+
+		//교육 할 수 있는 동물 종류
+		String animalKind="";
+			for(int i=0; i<education.getEduAnimalKinds().length; i++) {
+				animalKind += education.getEduAnimalKinds()[i];
+				for(int j=0; j<education.getEduAnimalKinds().length-1; j++) {
+					animalKind += ", ";
+				}
+			}
+		education.setEduAnimalKind(animalKind);
 		
 		adminDAO.educationBoardModifyProcess(education);
 		
@@ -446,6 +504,18 @@ public class AdminService {
 	public ModelAndView goodsBoardWrite(GoodsDTO goods, List<MultipartFile> fileList) throws IllegalStateException, IOException {
 		//파일 저장 경로
         String path = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+date.format(time)+"ㅡ";
+        
+        
+        MultipartFile goodsContents = goods.getGoodsContentsFile();
+		String fileName = date.format(time)+"ㅡ"+goodsContents.getOriginalFilename();
+		// 파일 저장 경로
+		String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+fileName;
+		
+		if(!goodsContents.isEmpty()) {
+			goodsContents.transferTo(new File(savePath));
+			goods.setGoodsContents(fileName);
+		}
+		
 
         for (MultipartFile mf : fileList) {
             String originFileName = mf.getOriginalFilename(); // 원본 파일 명
@@ -505,34 +575,54 @@ public class AdminService {
 	}
 	//용품 수정 처리
 	public ModelAndView goodsBoardModifyProcess(GoodsDTO goods, List<MultipartFile> fileList) throws IllegalStateException, IOException {
-		// 게시글 수정 전 서버에 저장된 사진 삭제
 		GoodsDTO goodsResult=adminDAO.goodsBoardView(goods.getGoodsNum());
-						String deletePath = "";
-						deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage1(); // 삭제할 파일의 경로
-						file = new File(deletePath);
-						if(file.exists() == true){
-							file.delete();
-						}
-						deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage2(); // 삭제할 파일의 경로
-						file = new File(deletePath);
-						if(file.exists() == true){
-							file.delete();
-						}
-						deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage3(); // 삭제할 파일의 경로
-						file = new File(deletePath);
-						if(file.exists() == true){
-							file.delete();
-						}
-						deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage4(); // 삭제할 파일의 경로
-						file = new File(deletePath);
-						if(file.exists() == true){
-							file.delete();
-						}
-						deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage5(); // 삭제할 파일의 경로
-						file = new File(deletePath);
-						if(file.exists() == true){
-							file.delete();
-						}
+	
+		String deletePath = "";
+		if(!goods.getGoodsContentsFile().isEmpty()) {
+			deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsContents(); // 삭제할 파일의 경로
+			file = new File(deletePath);
+			if(file.exists() == true){
+				file.delete();
+			}
+			MultipartFile goodsContents = goods.getGoodsContentsFile();
+			String fileName = date.format(time)+"ㅡ"+goodsContents.getOriginalFilename();
+			// 파일 저장 경로
+			String savePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+fileName;
+			
+			if(!goodsContents.isEmpty()) {
+				goodsContents.transferTo(new File(savePath));
+				goods.setGoodsContents(fileName);
+			}
+		} else {
+			goods.setGoodsContents(goodsResult.getGoodsContents());
+		}
+		// 게시글 수정 전 서버에 저장된 사진 삭제
+		if(!goods.getGoodsImageFile().isEmpty()) {
+				deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage1(); // 삭제할 파일의 경로
+				file = new File(deletePath);
+				if(file.exists() == true){
+					file.delete();
+				}
+				deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage2(); // 삭제할 파일의 경로
+				file = new File(deletePath);
+				if(file.exists() == true){
+					file.delete();
+				}
+				deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage3(); // 삭제할 파일의 경로
+				file = new File(deletePath);
+				if(file.exists() == true){
+					file.delete();
+				}
+				deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage4(); // 삭제할 파일의 경로
+				file = new File(deletePath);
+				if(file.exists() == true){
+					file.delete();
+				}
+				deletePath = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+goodsResult.getGoodsImage5(); // 삭제할 파일의 경로
+				file = new File(deletePath);
+				if(file.exists() == true){
+					file.delete();
+				}
 		
 			//파일 저장 경로
 			String path = "C:/Users/1/Desktop/RaiseAPet/src/main/webapp/resources/goodsFile/"+date.format(time)+"ㅡ";
@@ -558,7 +648,13 @@ public class AdminService {
 				            e.printStackTrace();
 				        }
 				     }
-						
+		}else {
+			goods.setGoodsImage1(goodsResult.getGoodsImage1());
+			goods.setGoodsImage2(goodsResult.getGoodsImage2());
+			goods.setGoodsImage3(goodsResult.getGoodsImage3());
+			goods.setGoodsImage4(goodsResult.getGoodsImage4());
+			goods.setGoodsImage5(goodsResult.getGoodsImage5());
+		}
 						// 용품 사용가능한 동물 종류 합치기
 						String[] arrayAnimalKind = goods.getGoodsAnimalKinds();
 						String animalKind="";
@@ -651,6 +747,7 @@ public class AdminService {
 		EventDTO eventResult = adminDAO.eventBoardView(eventNum);
 		CouponDTO couponResult = adminDAO.eventCoupon(eventResult.getEventCouponCode());
 		mav.addObject("couponView", couponResult);
+
 		mav.addObject("eventView", eventResult);
 		mav.setViewName("AdminEventView");
 		return mav;
@@ -676,13 +773,12 @@ public class AdminService {
 		
 		if(!eventFile.isEmpty()) {
 			eventFile.transferTo(new File(savePath));
+			event.setEventImage(fileName);
 		}
 		if(!eventTitleFile.isEmpty()) {
 			eventTitleFile.transferTo(new File(saveTitlePath));
+			event.setEventTitleImage(titleFileName);
 		}
-		event.setEventImage(fileName);
-		event.setEventTitleImage(titleFileName);
-		
 		adminDAO.eventBoardModifyProcess(event);
 		mav.setViewName("redirect:/eventBoardView?eventNum="+event.getEventNum());
 		return mav;
@@ -740,15 +836,12 @@ public class AdminService {
 		if(kind.equals("미용")) {
 			reviewResult = adminDAO.beautyReview(paging);
 			mav.addObject("reviewList", reviewResult);
-			return mav;
 		}else if(kind.equals("병원")) {
 			reviewResult = adminDAO.medicalReview(paging);
 			mav.addObject("reviewList", reviewResult);
-			return mav;
 		}else if(kind.equals("용품")) {
 			reviewResult = adminDAO.goodsReview(paging);
 			mav.addObject("reviewList", reviewResult);
-			return mav;
 		}else {
 			reviewResult = adminDAO.hotelReview(paging);
 			mav.addObject("reviewList", reviewResult);

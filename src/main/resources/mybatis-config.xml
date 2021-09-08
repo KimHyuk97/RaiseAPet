@@ -3,6 +3,10 @@
  "http://mybatis.org/dtb/mybatis-3-config.dtd">
  
 <configuration>
+	<settings>
+		<setting value="false" name="cacheEnabled"/>
+		<setting value="NULL" name="jdbcTypeForNull"/>
+	</settings>
  	<typeAliases>
  		<typeAlias type="com.icia.project.dto.MemberDTO" alias="member"/>
 		<typeAlias type="com.icia.project.dto.HotelDTO" alias="hotel"/>

@@ -94,7 +94,7 @@ public class EventDAO {
 	}
 	
 	//쿠폰 지급
-	public int EventCouponPayment(HashMap<String, Object> map) {
+	public int EventCouponPayment(HashMap<String, String> map) {
 		return sql.insert("event.eventCouponPayment",map);
 	}
 	

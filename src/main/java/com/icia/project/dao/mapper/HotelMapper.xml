@@ -20,7 +20,7 @@
 	<!-- 호텔결제 -->
 	<insert id="hotelcashi" parameterType="hotel">
 		INSERT INTO HOTEL_RESERVATION
-		VALUES (#{hotelCode},#{hotelUserName},#{hotelUserPhone},#{hotelCheckIn},#{hotelCheckOut},#{hotelAnimalKind},#{hotelSpecialNote},#{hotelPayment},#{hotelUserId},#{hotelReservPrice},#{hotelReservPoint})
+		VALUES (HOTEL_RESERVE_SEQ.NEXTVAL, #{hotelCode},#{hotelUserName},#{hotelUserPhone},#{hotelCheckIn},#{hotelCheckOut},#{hotelAnimalKind},#{hotelSpecialNote},#{hotelPayment},#{hotelUserId},#{hotelReservePrice},#{hotelReservePoint},0)
 	</insert>
 	<!-- 사용쿠폰삭제 -->
 	<delete id="couponDelete" parameterType="hashMap">
@@ -34,4 +34,8 @@
 	<update id="pointPlus" parameterType="hotel">
 		UPDATE MEMBERS SET USERPOINT = USERPOINT+(#{hotelPrice}*0.05) WHERE USERID=#{hotelUserId}
 	</update>
+	
+	 <select id="memberSelect" parameterType="hotel" resultType="member">
+  	SELECT * FROM MEMBERS WHERE USERID = #{hotelUserId}
+  </select>
 </mapper>

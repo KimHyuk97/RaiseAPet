@@ -4,7 +4,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>TITLE</title>
+	<title>Raise A Pet</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shorcut icon" href="resources/favicon.ico">
@@ -71,7 +71,6 @@
 					<c:if test="${empty sessionScope.loginUser }">
 						<a href="memberJoinForm"><img src="resources/svg/add.svg" alt="Join Image" style="width:25px; height:25px; float:right;"></a>
 						<a href="memberLoginForm"><img src="resources/svg/lock.svg" alt="Login Image" style="width:25px; height:25px; float:right;"></a>
-						<a href="reviewList">리뷰 리스트</a>
 					</c:if>
 					<c:if test="${not empty sessionScope.loginUser }">
 					<!-- 추가 -->
@@ -99,7 +98,7 @@
 				<li class="main-menu-li"><a href="beauty">BEAUTY</a></li>
 				<li class="main-menu-li"><a href="goodsList">GOODS</a></li>
 				<li class="main-menu-li"><a href="educationList">EDUCATION</a></li>
-				<li class="main-menu-li"><a href="reviewlist">REVIEW</a></li>
+				<li class="main-menu-li"><a href="reviewList">REVIEW</a></li>
 				<li class="main-menu-li"><a href="eventList">EVENT</a></li>
 				<li class="main-menu-li"><a href="noticeList">NOTICE</a></li>
 			</ul><!-- main-menu -->
@@ -120,7 +119,7 @@
 				<img src="resources/notice/hotel.png" class="ls-bg" alt="호텔 정보 사진"/>
 
 					<div class="slider-content ls-l" style="top:60%; left:30%;" data-ls="offsetyin:100%; offsetxout:-50%; durationin:800; delayin:100; durationout:400; parallaxlevel:0;">
-						<a class="btn" href="#">RESERVATION</a>
+						<a class="btn" href="hotelList">RESERVATION</a>
 						<h3 class="title"><b>Love, Happy, Hotel</b></h3>
 						<h6>우리 호텔은 반려동물은 위해 최선을 다합니다.</h6>
 					</div>
@@ -130,7 +129,7 @@
 				<img src="resources/notice/medical.jpg" class="ls-bg" alt="" />
 
 					<div class="slider-content ls-l" style="top:60%; left:30%;" data-ls="offsetyin:100%; offsetxout:-50%; durationin:800; delayin:100; durationout:400; parallaxlevel:0;">
-						<a class="btn" href="#">RESERVATION</a>
+						<a class="btn" href="medicalDoctorList">RESERVATION</a>
 						<h3 class="title"><b>Medical, Love, Pet</b></h3>
 						<h6>우리 병원은 최신식 기계와 자동화 장치를 통해 반려동물의 건강을 책임집니다.</h6>
 					</div>
@@ -139,7 +138,7 @@
 				<img src="resources/notice/beauty.png" class="ls-bg" alt="" />
 
 					<div class="slider-content ls-l" style="top:60%; left:30%;" data-ls="offsetyin:100%; offsetxout:-50%; durationin:800; delayin:100; durationout:400; parallaxlevel:0;">
-						<a class="btn" href="#">RESERVATION</a>
+						<a class="btn" href="beautyList">RESERVATION</a>
 						<h3 class="title"><b>Beautiful, Like, Pet</b></h3>
 						<h6>우리 미용실은 반려동물 각각의 성향을 존중합니다.</h6>
 					</div>
@@ -148,7 +147,7 @@
 				<img src="resources/notice/goods.jpg" class="ls-bg" alt="" />
 
 					<div class="slider-content ls-l" style="top:60%; left:30%;" data-ls="offsetyin:100%; offsetxout:-50%; durationin:800; delayin:100; durationout:400; parallaxlevel:0;">
-						<a class="btn" href="#">BUY</a>
+						<a class="btn" href="goodsList">BUY</a>
 						<h3 class="title"><b>Goods, Exciting, Love it</b></h3>
 						<h6>반려동물의 쾌적한 한경을 위해 항상 노력합니다.</h6>
 					</div>
@@ -157,34 +156,11 @@
 
 		</div><!-- slider -->
 	</div><!-- main-slider -->
+	<a onclick="window.open('http://pf.kakao.com/_BxlJxlK/chat','kakaochatbot','width=500, height=700, menubar=no, status=no, toolbar=no');"><img src="https://developers.kakao.com/assets/img/about/logos/channel/consult_small_yellow_pc.png" alt="카카오톡 채널 1:1 채팅 버튼" title="카카오톡 채널 1:1 채팅 버튼"></a>
 <!--/////////////////////////////////////// 값이 바뀔 구간 끝 /////////////////////////////////////////////////-->	
 
 
 
-
-
-
-<!-- 여기부터 하단 내용 -->
-	<section class="footer-instagram-area">
-
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<h5 class="title"><b class="light-color">Follow me &copy; instagram</b></h5>
-				</div><!-- col-lg-4 -->
-			</div><!-- row -->
-		</div><!-- container -->
-
-		<ul class="instagram">
-			<li><a href="#"><img src="images/instragram-1-300x400.jpg" alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-2-300x400.jpg" alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-3-300x400.jpg" alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-4-300x400.jpg" alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-5-300x400.jpg" alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-6-300x400.jpg" alt="Instagram Image"></a></li>
-			<li><a href="#"><img src="images/instragram-7-300x400.jpg" alt="Instagram Image"></a></li>
-		</ul>
-	</section><!-- section -->
 
 
 	<footer>
@@ -232,15 +208,15 @@
 	var popUpBtnBasket = document.getElementById("popUpBtnBasket");
 	var mywindow;
 
-	var popupX = (window.screen.width / 2) - (900 / 2);
+	var popupX = (window.screen.width / 2) - (1100 / 2);
 	// &nbsp; 만들 팝업창 좌우 크기의 1/2 만큼 보정값으로 빼주었음
 	
-	var popupY= (window.screen.height /2) - (600 / 2);
+	var popupY= (window.screen.height /2) - (800 / 2);
 	// &nbsp; 만들 팝업창 상하 크기의 1/2 만큼 보정값으로 빼주었음
 
 	// 장바구니
 	popUpBtnBasket.addEventListener("click", function(){
-		mywindow = window.open("memberBasketList", "mywindow", "width=900, height=600, left=" + popupX + ", top=" + popupY);
+		mywindow = window.open("memberBasketList", "mywindow", "width=1100, height=800, left=" + popupX + ", top=" + popupY);
 	});
 </script>
 </html>

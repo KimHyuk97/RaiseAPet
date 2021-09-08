@@ -28,7 +28,7 @@ var msg;
 	        merchant_uid : 'merchant_' + new Date().getTime(), //결제 시간
 	        name : '${medical.medicalReserveDoctor}',//의사
 	        amount : "${medical.medicalReservePrice}",//가격
-	        buyer_name : '${medical.medicalReserveUserName}',//이름 
+	        buyer_name : '${medical.medicalReserveUserId}',//이름 
 	        buyer_tel : '${sessionScope.loginUser.userPhone}'//전화번호 
 			}, function(rsp){
 				if(rsp.success){
@@ -55,7 +55,7 @@ var msg;
 				"medicalReserveAnimalNote":"${medical.medicalReserveAnimalNote}",
 				"medicalReserveSubject":"${medical.medicalReserveSubject}",
 				"medicalReserveDoctor":"${medical.medicalReserveDoctor}",
-				"medicalReserveUserName":"${medical.medicalReserveUserName}",
+				"medicalReserveUserId":"${medical.medicalReserveUserId}",
 				"medicalReservePrice":${medical.medicalReservePrice},
 				"medicalReservePayment":"${medical.medicalReservePayment}",
 				"userId":"${sessionScope.loginUser.userId}",

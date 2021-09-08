@@ -42,9 +42,9 @@ public class BeautyController {
 	// 미용사 정보
 	BeautyDTO bdl = new BeautyDTO();
 	@RequestMapping(value = "/designerInformation", method = RequestMethod.GET)
-	public @ResponseBody BeautyDTO designerInformation(@ModelAttribute BeautyDTO beauty) {
-		bdl = beautySvc.DesignerInformation(beauty);
-		return bdl;
+	public ModelAndView designerInformation(@ModelAttribute BeautyDTO beauty) {
+		mav = beautySvc.DesignerInformation(beauty);
+		return mav;
 	}
 	// 미용 예약 페이지 이동
 	@RequestMapping(value="/beautyReservationForm", method = RequestMethod.GET)

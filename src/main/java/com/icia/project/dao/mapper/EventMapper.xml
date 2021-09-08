@@ -40,7 +40,7 @@
 	
 	<!-- EventCommentList -->
 	<select id="eventCommentList" resultType="eventComment" parameterType="int">
-		SELECT * FROM EVENT_COMMENT WHERE COMMENTEVENTNUM = #{commentEventNum} ORDER BY COMMENTNUM ASC
+		SELECT * FROM EVENT_COMMENT WHERE COMMENTEVENTNUM = #{commentEventNum} ORDER BY COMMENTNUM DESC
 	</select>
 		
 	<!-- EventCommnetWrite -->	

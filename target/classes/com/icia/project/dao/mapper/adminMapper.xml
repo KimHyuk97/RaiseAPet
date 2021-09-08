@@ -46,7 +46,7 @@
 	<!-- 글 수정 -->
 	<update id="BeautyModify" parameterType="beauty">
 		UPDATE BEAUTY_DESIGNER SET DESIGNERNAME=#{designerName}, DESIGNEROFF=#{designerOff}, DESIGNERIMAGE=#{designerImage}, 
-		DESIGNERCAREER=${designerCareer} WHERE DESIGNERCODE=#{designerCode}
+		DESIGNERCAREER=#{designerCareer} WHERE DESIGNERCODE=#{designerCode}
 	</update>
 	<!-- 글삭제 -->
 	<delete id="BeautyDelete" parameterType="String">
@@ -81,11 +81,15 @@
 	<!-- 글쓰기 -->
 	<insert id="EducationWrite" parameterType="education">
 		INSERT INTO EDUCATION 
-		VALUES(#{eduTitle}, #{eduContents}, #{eduImage}, #{eduVideo}, 0, 0, EDU_SEQ.nextVal, '교육')
+		VALUES(#{eduTitle}, #{eduContents}, #{eduImage}, #{eduVideo}, 0, 0, EDU_SEQ.nextVal, '교육', #{eduAnimalKind})
 	</insert>
+	<!-- 글 목록 가져오기 전 카운트 -->
+	<select id="EducationCount" parameterType="String" resultType="int">
+		SELECT COUNT(*) FROM EDUCATION WHERE EDUANIMALKIND LIKE '%'||#{eduAnimalKind}||'%'
+	</select>
 	<!-- 글 목록 가져오기 -->
-	<select id="EducationList" resultType="education">
-		SELECT * FROM EDUCATION
+	<select id="EducationList" parameterType="hashMap" resultType="education">
+		SELECT * FROM (SELECT B.*, ROW_NUMBER() OVER(ORDER BY EDUNUM) AS RN FROM EDUCATION B WHERE EDUANIMALKIND LIKE '%'||#{eduAnimalKind}||'%') WHERE RN BETWEEN #{startRow} AND #{endRow}
 	</select>
 	<!-- 글 상세보기 -->
 	<select id="EducationView" parameterType="int" resultType="education">
@@ -93,7 +97,7 @@
 	</select>
 	<!-- 글 수정 -->
 	<update id="EducationModify" parameterType="education">
-		UPDATE EDUCATION SET EDUTITLE=#{eduTitle}, EDUCONTENTS=#{eduContents}, EDUIMAGE=#{eduImage}, EDUVIDEO=#{eduVideo} WHERE EDUNUM=#{eduNum}
+		UPDATE EDUCATION SET EDUTITLE=#{eduTitle}, EDUCONTENTS=#{eduContents}, EDUIMAGE=#{eduImage}, EDUVIDEO=#{eduVideo}, EDUANIMALKIND=#{eduAnimalKind} WHERE EDUNUM=#{eduNum}
 	</update>
 	<!-- 글삭제 -->
 	<delete id="EducationDelete" parameterType="int">

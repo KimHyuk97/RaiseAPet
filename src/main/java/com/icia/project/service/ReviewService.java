@@ -37,36 +37,56 @@ public class ReviewService {
 	PageDTO paging = new PageDTO();
 	
 	//리뷰 작성 전 결제 정보 가져오기
-	public ModelAndView reviewWriteForm(String code, int num, String kind) {
+	public ModelAndView reviewWriteForm(String code, int num, String kind, int reserveNum) {
 		// 리뷰 정보를 가져오기 전, 회원 정지를 받았는지 확인
 		MemberDTO member = (MemberDTO)session.getAttribute("loginUser");
 		int suspendResult = reviewDAO.suspendCheck(member.getUserId());
 		
+		
+		
+		
+		
 		// sysdate보다 lockdate가 큰 회원이 select 되면
 		if(suspendResult>0) {
 			mav.addObject("suspendCheck", "정지");
-			mav.setViewName("redirect:/");					//은희한테 주소값 받고, alert 창 뜨게 해주기.
+			mav.setViewName("windowClose");					//은희한테 주소값 받고, alert 창 뜨게 해주기.
 		} else {// 회원이 select 되지 않는다면
 			// 리뷰할 정보 가져오기
 			if(kind.equals("호텔")) {
 				HotelDTO hotel = reviewDAO.hotelReviewWriteForm(code);
+				mav.addObject("medicalView", null);
+				mav.addObject("goodsView", null);
+				mav.addObject("beautyView", null);
 				mav.addObject("hotelView", hotel);
 			} else if(kind.equals("미용")) {
 				BeautyDTO beauty = reviewDAO.beautyReviewWriteForm(code);
+				mav.addObject("medicalView", null);
+				mav.addObject("goodsView", null);
+				mav.addObject("hotelView", null);
 				mav.addObject("beautyView", beauty);
 			} else if(kind.equals("용품")) {
 				GoodsDTO goods = reviewDAO.goodsReviewWriteForm(num);
+				mav.addObject("medicalView", null);
+				mav.addObject("hotelView", null);
+				mav.addObject("beautyView", null);
 				mav.addObject("goodsView", goods);
 			} else {
 				MedicalDTO medical = reviewDAO.medicalReviewWriteForm(code);
+				mav.addObject("hotelView", null);
+				mav.addObject("goodsView", null);
+				mav.addObject("beautyView", null);
 				mav.addObject("medicalView", medical);
 			}
+			
+			mav.addObject("reserveNum", reserveNum);
 			mav.setViewName("ReviewWriteForm");
 		}
 		return mav;
 	}
 	// 리뷰 작성
 	public ModelAndView reviewWrite(ReviewDTO review) throws IllegalStateException, IOException {
+		
+		
 		
 		MultipartFile reviewFile = review.getReviewImageFile();
 			
@@ -81,8 +101,23 @@ public class ReviewService {
 			}
 			review.setReviewImage(fileName);
 	
-			reviewDAO.reviewWrite(review);
-			mav.setViewName("redirect:/myPage");
+			MemberDTO member = (MemberDTO)session.getAttribute("loginUser");
+			review.setReviewUserId(member.getUserId());
+			//리뷰 작성
+			int result = reviewDAO.reviewWrite(review);
+			//리뷰 카운트 +1
+			if(result>0) {
+				if(review.getReviewKind().equals("호텔")) {
+					reviewDAO.reviewHotelUp(review.getReserveNum());
+				}else if(review.getReviewKind().equals("미용")) {
+					reviewDAO.reviewBeautyUp(review.getReserveNum());
+				}else if(review.getReviewKind().equals("병원")) {
+					reviewDAO.reviewMedicalUp(review.getReserveNum());
+				}else{
+					reviewDAO.reviewGoodsUp(review.getReserveNum());
+				}
+			}
+			mav.setViewName("windowClose");
 		return mav;
 	}
 	
@@ -189,7 +224,6 @@ public class ReviewService {
 	}
 	//리뷰 수정 처리
 	public ModelAndView reviewModifyProcess(ReviewDTO review)throws IllegalStateException, IOException {
-		System.out.println("aaaaaaa");
 		MultipartFile reviewFile = review.getReviewImageFile();
 			
 			String fileName = date.format(time)+"ㅡ"+reviewFile.getOriginalFilename();
@@ -202,10 +236,10 @@ public class ReviewService {
 				reviewFile.transferTo(new File(savePath));
 			}
 			review.setReviewImage(fileName);
-			System.out.println("aaaaaaddddddddda");
+
 			reviewDAO.reviewModifyProcess(review);
-			System.out.println("aaaccccccccccccaaaa");
-			mav.setViewName("redirect:/myPage");
+
+			mav.setViewName("redirect:/reviewList");
 		return mav;
 	}
 	//리뷰 삭제

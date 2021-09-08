@@ -142,6 +142,7 @@
 			data : {"userName" : userName, "userEmail" : userEmail},
 
 			// 성공 시
+			// } 지웠다가 다시 쓰기
 			success : function(data){
 				if(data=="OK"){
 					idFindResult.innerHTML = "회원님의 아이디는 " + "${userIdFindResult}" + "입니다.";

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.icia.project.dto.EduCommentDTO;
 import com.icia.project.dto.EduCommentLikeDTO;
 import com.icia.project.dto.EducationDTO;
+import com.icia.project.dto.ReviewDTO;
 @Repository
 public class EducationDAO {
 
@@ -32,9 +33,23 @@ public class EducationDAO {
 	 */
 
 	// 교육 리스트
-	public List<EducationDTO> educationList(EducationDTO education) {
-		return sql.selectList("education.educationList",education);
-	}
+	//목록 가져올 게시글 카운팅하기
+		public int ListCount(HashMap<String, Object> map) {
+			return sql.selectOne("education.eduCount", map);
+		}
+
+		//리뷰 좋아요 순 정렬 데이터 요청
+		public List<EducationDTO> eduLikeLineUp(HashMap<String, Object> map) {
+			return sql.selectList("education.eduLikeLineUp", map);
+		}
+		//리뷰 오래된 순 정렬 데이터 요청
+		public List<EducationDTO> eduHitLineUp(HashMap<String, Object> map) {
+			return sql.selectList("education.eduHitLineUp", map);
+		}
+		//교육리스트
+		public List<EducationDTO> eduList(HashMap<String, Object> map) {
+			return sql.selectList("education.eduList",map);
+		}
 
 	//==========================================================
 	
@@ -118,6 +133,11 @@ public class EducationDAO {
 	public String eduLikeUserId(EducationDTO education) {
 		return sql.selectOne("education.eduLikeUserIdCheck",education);
 	}
+
+
+
+
+	
 
 
 }

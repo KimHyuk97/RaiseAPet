@@ -5,10 +5,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Raise A Pet</title>
 <script type="text/javascript"	src="${pageContext.request.contextPath}/resources/js/jquery-3.5.1.js">
 </script>
+<style>
+table,tr,td{
+text-align: center; margin:0 auto; border:1px solid #D6DBDF; border-collapse:collapse; width:500px;
+}
 
+</style>
 </head>
 <script>
 //
@@ -36,7 +41,7 @@ function goodsAsk(){
     if(askSecret==''){
 		askSecret = "일반글";
      }
-
+	
 	$.ajax({
 		type:'get',
 		url: "goodsAskWrite",
@@ -53,22 +58,23 @@ function goodsAsk(){
 			window.close();
 			},
 			error : function(){
-				alert("문의글 입력 실패");
+				alert("이미 작성하였습니다.");
+				window.close();
 			}
 		});
 }
 </script>
 <body>
-<h3>상품문의</h3>
-<img src="resources/fileUpload/${goodsAsk.goodsImage1}" width="200px" height="200px"/>
-<table border='1'>
+<h3 style="text-align: center; margin:0 auto;">상품문의</h3>
+<img src="resources/goodsFile/${goodsAsk.goodsImage1}" width="250px" height="150px" style=" margin-left:25%"/>
+<table>
 <tr>
 	<td>작성자</td>
 	<td colspan='2'><input type="hidden" name="askUserId" value="${sessionScope.loginUser.userId}">${sessionScope.loginUser.userId}</td>
 </tr>
 <tr>
 	<td>문의글내용</td>
-	<td><textarea rows="10" cols="30" id="askContents" name="askContents"></textarea></td>
+	<td><textarea rows="6" cols="40" id="askContents" name="askContents" style="border:1px solid #D6DBDF;"></textarea></td>
 	<td><input type="checkbox"  id="askSecret"  name="askSecret"  value="비밀글">비밀글
 	</td>
 </tr>

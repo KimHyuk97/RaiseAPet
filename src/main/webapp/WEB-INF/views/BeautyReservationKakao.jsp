@@ -28,7 +28,7 @@ var msg;
 	        merchant_uid : 'merchant_' + new Date().getTime(), //결제 시간
 	        name : '${beauty.beautyReserveDesigner}',//디자이너 코드
 	        amount : "${beauty.beautyReservePrice}",//가격
-	        buyer_name : '${beauty.beautyReserveUserName}',//이름 
+	        buyer_name : '${beauty.beautyReserveUserId}',//이름 
 	        buyer_tel : '${sessionScope.loginUser.userPhone}'//전화번호 
 			}, function(rsp){
 				if(rsp.success){
@@ -55,7 +55,7 @@ var msg;
 				"beautyReserveAnimalNote":"${beauty.beautyReserveAnimalNote}",
 				"beautyReserveSubject":"${beauty.beautyReserveSubject}",
 				"beautyReserveDesigner":"${beauty.beautyReserveDesigner}",
-				"beautyReserveUserName":"${beauty.beautyReserveUserName}",
+				"beautyReserveUserId":"${beauty.beautyReserveUserId}",
 				"beautyReservePrice":${beauty.beautyReservePrice},
 				"beautyReservePayment":"${beauty.beautyReservePayment}",
 				"userId":"${sessionScope.loginUser.userId}",

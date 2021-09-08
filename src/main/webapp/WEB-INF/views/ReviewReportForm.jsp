@@ -6,6 +6,35 @@
 <head>
 <meta charset="UTF-8">
 <title>리뷰 신고 폼</title>
+<style>
+table {
+	width : 800px;
+}
+
+ #tr{
+		margin: 3px 0;
+ 		text-align : center;
+ }
+ #reports{
+		margin: 3px 0;
+ 		align : center; 
+ }
+ td {
+ 	text-align: center; 
+ }
+</style>
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+
+
+	<!-- Stylesheets -->
+	<link href="resources/common-css/bootstrap.css" rel="stylesheet">
+	<link href="resources/common-css/ionicons.css" rel="stylesheet">
+	<link href="resources/common-css/layerslider.css" rel="stylesheet">
+	<link href="resources/01-homepage/css/styles.css" rel="stylesheet">
+	<link href="resources/01-homepage/css/responsive.css" rel="stylesheet">
+
+
 </head>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
@@ -21,54 +50,68 @@ $(document).ready(function(){
 });
 </script>
 <body>
-	<table>
-		<form id="report">
-			<tr>
-				<th>신고 할 리뷰</th>
-				<td>
-					<table border="1">
+	<table style="width:800px;">
+	
+			<form id="report">
+				<tr>		
+					<td style="word-break:break-all">
+						<table border="1" style="border : 2px solid #d3cfce;">
+							<tr >
+								<td rowspan="3" style="width:250px; height:250px;" ><img src="resources/reviewFile/${reviewView.reviewImage }" width="100%"  alt="리뷰 사진"/></td>
+								<td>${reviewView.reviewTitle }</td></tr>
+							<tr><td >${reviewView.reviewUserId }</td></tr>
+							<tr><td style="width:350px;">${reviewView.reviewContents }</td></tr>
+							<input type="hidden" id="reportReviewNum" value="${reviewView.reviewNum}"/>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					
+				</tr>
+				<tr>
+				
+					<td>
+					<table>
+					<tr>
+							<th>신고 분류</th>
+						</tr>
+					</table>
+					
+						<table style="text-align:center; width:350px; margin: 0px 200px;">
+					
+						<tr id="reports" >
+							<td><input type="radio" name="reportKind" id="reportKind1" value="욕설"/></td>
+							<td><input type="radio" name="reportKind" id="reportKind2" value="허위사실"></td>
+							<td><input type="radio" name="reportKind" id="reportKind3" value="악의적 비방"></td>
+							<td><input type="radio" name="reportKind" id="reportKind4" value="기타"></td>
+						</tr>
 						<tr>
-							<td rowspan="3"><img src="resources/reviewFile/${reviewView.reviewImage }" alt="리뷰 사진"/></td>
-							<td>${reviewView.reviewTitle }</td></tr>
-						<tr><td>${reviewView.reviewUserId }</td></tr>
-						<tr><td>${reviewView.reviewContents }</td></tr>
-						<input type="hidden" id="reportReviewNum" value="${reviewView.reviewNum }"/>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<th>신고 분류</th>
-				<td>
-					<table style="text-align:center; width:350px;">
-					<tr>
-						<td><input type="radio" name="reportKind" id="reportKind1" value="욕설"/></td>
-						<td><input type="radio" name="reportKind" id="reportKind2" value="허위사실"></td>
-						<td><input type="radio" name="reportKind" id="reportKind3" value="악의적 비방"></td>
-						<td><input type="radio" name="reportKind" id="reportKind4" value="기타"></td>
-					</tr>
-					<tr>
-						<td>욕설</td>
-						<td>허위사실</td>
-						<td>악의적 비방</td>
-						<td>기타</td>
-					</tr>
-					</table>
-				</td>
-			</tr>
-			<!-- 기타 버튼을 누르면 작성 창이 나오게 -->
-			<tr id="reportText" style="display: none;">
-				<td></td>
+							<td>욕설</td>
+							<td>허위사실</td>
+							<td>악의적 비방</td>
+							<td>기타</td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+				<!-- 기타 버튼을 누르면 작성 창이 나오게 -->
+			<tr id="reportText" style="display: none;  text-align:center;">
+			
 				<td colspan="3">
-						<textarea id="reportKindAnother"></textarea>
+						<textarea rows="3" cols="70" id="reportKindAnother"></textarea>
 				</td>
 			</tr>
 				
 			<input type="hidden" id="reportUserId" value="${sessionScope.loginUser.userId }"/>
 		</form>
-			<tr>
-				<td colspan="2"><button id="reportSubmit">신고</button><button onclick="closeWindow()">취소</button></td>
+</table>
+<table>
+		<br>	
+			<tr id="tr">
+				<td colspan="2"><button id="reportSubmit" >신고</button>  <button  onclick="closeWindow()" >취소</button></td>
+				
 			</tr>
-	</table>
+</table>
 </body>
 <script>
 $(document).ready(function(){

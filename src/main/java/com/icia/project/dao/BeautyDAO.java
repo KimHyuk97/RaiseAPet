@@ -21,7 +21,7 @@ public class BeautyDAO {
 		return sql.selectList("beauty.beautyList",beauty);
 	}
 
-	//디자이너 정보(ajax)
+	//디자이너 정보
 	public BeautyDTO DesignerInformation(BeautyDTO beauty) {
 		return sql.selectOne("beauty.designerInformation",beauty);
 	}
@@ -48,6 +48,10 @@ public class BeautyDAO {
 	//포인트적립
 	public void beautyReservationAddPoint(BeautyDTO beauty) {
 		sql.update("beauty.memberAddpoint",beauty);		
+	}
+
+	public MemberDTO memberSelect(BeautyDTO beauty) {
+		return sql.selectOne("beauty.memberSelect",beauty);
 	}
 
 	

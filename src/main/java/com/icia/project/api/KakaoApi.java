@@ -39,7 +39,7 @@ public class KakaoApi {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=964cb0d4419ff73c619b3139a1a93c8f");
-            sb.append("&redirect_uri=http://localhost:9090/project/join");
+            sb.append("&redirect_uri=http://106.243.194.230:9092/project/join");
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();
@@ -93,7 +93,7 @@ public class KakaoApi {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=964cb0d4419ff73c619b3139a1a93c8f");
-            sb.append("&redirect_uri=http://localhost:9090/project/login");
+            sb.append("&redirect_uri=http://106.243.194.230:9092/project/login");
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();

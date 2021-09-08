@@ -89,9 +89,13 @@ public class AdminDAO {
 		sql.delete("AdminManagement.DoctorDelete", doctorCode);
 	}
 	/*ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ*/
+	//교육 목록 조회 전 카운트
+	public int educationCount(String eduAnimalKind) {
+		return sql.selectOne("AdminManagement.EducationCount", eduAnimalKind);
+	}
 	//교육 목록
-	public List<EducationDTO> educationManagement() {
-		return sql.selectList("AdminManagement.EducationList");
+	public List<EducationDTO> educationManagement(HashMap<String, Object> map) {
+		return sql.selectList("AdminManagement.EducationList", map);
 	}
 	//교육 작성
 	public void educationBoardWrite(EducationDTO education) {
@@ -282,6 +286,7 @@ public class AdminDAO {
 	public List<GoodsDTO> adminGoodsBuyList(PageDTO paging) {
 		return sql.selectList("AdminManagement.GoodsBuy",paging);
 	}
+	
 	
 	
 	

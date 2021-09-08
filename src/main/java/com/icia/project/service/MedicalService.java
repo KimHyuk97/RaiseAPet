@@ -42,9 +42,11 @@ public class MedicalService {
 	}
 
 	// 의사 정보
-	public MedicalDTO DoctorInformation(MedicalDTO medical) {
+	public ModelAndView DoctorInformation(MedicalDTO medical) {
 		md = mddao.DoctorInformation(medical);
-		return md;
+		mav.addObject("doctor", md);
+		mav.setViewName("MedicalReservation");
+		return mav;
 	}
 
 	// 예약페이지
@@ -81,7 +83,9 @@ public class MedicalService {
 			mddao.medicalReservation(medical);
 			//포인트적립
 			mddao.medicalReservationAddPoint(medical);
-			mav.setViewName("MeautyReservationSuccess");
+			MemberDTO member2 = mddao.memberSelect(medical);
+			session.setAttribute("loginUser", member2);
+			mav.setViewName("MedicalReservationSuccess");
 		}
 		return mav;
 	}
@@ -105,7 +109,9 @@ public class MedicalService {
 		mddao.medicalReservation(medical);
 		
 		//결제정보 저장 후 포인트 적립
-		mddao.medicalReservationAddPoint(medical);
+			mddao.medicalReservationAddPoint(medical);
+			MemberDTO member2 = mddao.memberSelect(medical);
+			session.setAttribute("loginUser", member2);
 
 		return md;
 	}

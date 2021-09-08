@@ -19,7 +19,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home() {
-		//return "editorTest";
+		//return "AAA";
 		return "Index";
 	}
 	
@@ -60,6 +60,7 @@ public class HomeController {
 		return "AdminCouponWriteForm";
 	}
 	
+	
 	// 회원 신고 리스트로 이동
 	@RequestMapping(value = "goAdminMemberReport", method = RequestMethod.GET)
 	public String goAdminMemberReport() {
@@ -71,7 +72,12 @@ public class HomeController {
 	public String goAdminAskList() {
 		return "AdminAskList";
 	}
-	
+	// 관리자 메인 화면으로 이동
+	@RequestMapping(value = "goAdminDashboard", method = RequestMethod.GET)
+	public String goAdminDashboard() {
+		return "AdminDashboard";
+	}
+
 	
 /*                                         은희                                                                              */
 		

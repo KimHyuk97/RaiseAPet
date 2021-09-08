@@ -5,7 +5,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>RaiseAPet</title>
+<style>
+	th{
+		background: #DDC3F7;
+	}
+	td{
+		font-family: monospace;
+	}
+	table {
+    width: 100%;
+    border-top: 1px solid #D6DBDF;
+    border-collapse: collapse;
+    width:100%; height:100%;
+    text-align: center;
+    margin-left: -8px;
+  	}
+  	
+ 	th, td {
+    border: 1px solid #D6DBDF;
+    padding: 10px;
+ 	text-align: center;
+  	}
+</style>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
@@ -13,7 +35,33 @@
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />  
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
 	<script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
-	
+
+
+<!-- 추가 -->
+<script>
+	function couponCount(){
+
+		$.ajax({
+			type : "POST",
+			url : "couponCount",
+
+			// 성공 시
+			success : function(data){
+				if(data=="OK"){
+					location.href="memberMyPage";
+				}else{
+					alert("실패");
+				}
+			},
+
+			// 실패 시
+			error : function(){
+				alert('couponCount 함수 통신 실패');
+				}
+		});
+	}
+</script>
+<!-- 쿠폰함 갯수 end -->
 <script>
 //달력
 $(document).ready(function () {
@@ -35,10 +83,11 @@ $(document).ready(function () {
 			 beautyReserveDate(selectedDate);
 			 //날짜 조회 성공하면 예약 날짜가 가능한 날짜만 보여지게 됌
 		 		var output = "";
-				output += "<input type='radio' id='beautyReserveTime1' name='beautyReserveTime' value='1타임'/>1타임(AM9:00  ~ AM10:30)<br/>";
+		 		output += "<th>예약시간</th>";
+				output += "<td><input type='radio' id='beautyReserveTime1' name='beautyReserveTime' value='1타임'/>1타임(AM9:00  ~ AM10:30)<br/>";
 				output += "<input type='radio' id='beautyReserveTime2' name='beautyReserveTime' value='2타임'/>2타임(AM11:00 ~ PM12:30)<br/>";
 				output += "<input type='radio' id='beautyReserveTime3' name='beautyReserveTime' value='3타임'/>3타임(PM2:00  ~ PM3:30 )<br/>";
-				output += "<input type='radio' id='beautyReserveTime4' name='beautyReserveTime' value='4타임'/>4타임(PM4:00  ~ PM5:30 )";
+				output += "<input type='radio' id='beautyReserveTime4' name='beautyReserveTime' value='4타임'/>4타임(PM4:00  ~ PM5:30 )</td>";
 				$("#beautyReserveTimes").html(output);
 		 }
 	});
@@ -139,8 +188,8 @@ function Point22(){
 		var data="";
     	data += "<th>포인트적용</th>";
     	data +="<input type='hidden' name='userId' value='${sessionScope.loginUser.userId}'>";
-		data +="<th><small>잔여포인트:<a onclick='all_point()' id='point'>"+${sessionScope.loginUser.userPoint}+"</a></small><br/>";
-		data +="<input type='text' id='beautyReservePointUseing' name='userPoint' value='0'><a onclick='usePoint()'>사용</a></th>";
+		data +="<td><small>잔여포인트:<a onclick='all_point()' id='point'>"+${sessionScope.loginUser.userPoint}+"</a></small><br/>";
+		data +="<input type='text' id='beautyReservePointUseing' name='userPoint' value='0'><a onclick='usePoint()'>사용</a></td>";
 		$('#beautyReservePointCouponForm').html(data);			
 }	
 
@@ -163,17 +212,16 @@ function Coupon22(){
 //쿠폰 폼
 function beautyReserveCouponList(result){
 	var output ="";
-	output +="<th>쿠폰적용</th><th>";
-	if(result != null){
+	output +="<th>쿠폰적용</th><td>";
+	if(result.couponCode != null){
 	for(var i in result){
 		output += "<input type='hidden' id='CouponSale"+i+"' name='CouponSale' value='"+result[i].couponSale+"'>";
 		output += "<input type='hidden' name='CouponCode' value='"+result[i].couponSale+"'>";
 		output += result[i].couponName+"<input type='radio'  name='couponCode' value='"+result[i].couponCode+"' onclick='couponUse("+i+")'>&nbsp";
-		console.log(i);
 	}
-	output +="</th>";
+	output +="</td>";
 	}else{
-		output +="<td><div>쿠폰이 없습니다.</div></td>";
+		output +="쿠폰이 없습니다</td>";
 	}
     $('#beautyReservePointCouponForm').html(output);
 }
@@ -233,27 +281,31 @@ function usePoint(){
 </script>
 </head>
 <body>
-<h1>예약페이지</h1>
+<header>
+   <div style="height:100%;  width:11.8%;">
+      <a class="logo" style=" height: 100%; padding:0;">
+         <img src="resources/images/logo.png" alt="Logo Image" style="margin-left:175px; height : 110px;">
+      </a>
+   </div>      
+</header>
 	<form action="beautyReservation" method="POST">
 		<table border='1'>
 			<tr>
 				<th>예약날짜</th>
 				<td><input type="text" id="startDate" name="beautyReserveDate"></td>
 			</tr>
-			<tr>
-				<th colspan='2' id="beautyReserveTimes">
+			<tr id="beautyReserveTimes">
 				
-				</th>
 			</tr>
 			<tr>
 				<th>동물종류</th>
-				<th><input type='radio'  name='beautyReserveAnimalKind' value='dog'/> Dog
+				<td><input type='radio'  name='beautyReserveAnimalKind' value='dog'/> Dog
 					<input type='radio'  name='beautyReserveAnimalKind' value='cat'/>Cat
-				</th>
+				</td>
 			</tr>
 			<tr>
 				<th>동물 나이</th>
-				<th><select name="beautyReserveAnimalAge">
+				<td><select name="beautyReserveAnimalAge">
 				<option value="">나이를 선택해주세요</option>
 				<option value="1">1살</option>
 				<option value="2">2살</option>
@@ -263,25 +315,25 @@ function usePoint(){
 				<option value="6">6살</option>
 				<option value="7">7살</option>
 				<option value="8">8살~</option>
-				</select></th>
+				</select></td>
 			</tr>
 			<tr>
 				<th>특이사항</th>
-				<th><textarea rows="5" cols="40" name="beautyReserveAnimalNote"></textarea></th>
+				<td><textarea rows="5" cols="40" name="beautyReserveAnimalNote"></textarea></td>
 			</tr>
 			<tr>
 				<th>디자인</th>
-				<th><input type="checkbox" id="beautyReservePrice1" name='beautyReserveSubject' value='털관리'/>털관리<br/>
+				<td><input type="checkbox" id="beautyReservePrice1" name='beautyReserveSubject' value='털관리'/>털관리<br/>
 					<input type='checkbox' id="beautyReservePrice2" name='beautyReserveSubject' value='발톱관리'/>발톱관리<br/>
-					<input type='checkbox' id="beautyReservePrice3" name='beautyReserveSubject' value='목욕'/>목욕</th>
+					<input type='checkbox' id="beautyReservePrice3" name='beautyReserveSubject' value='목욕'/>목욕</td>
 				</tr>
 			<tr>
 				<th>예약한 디자이너</th>
-				<th><input type ="hidden" name ="beautyReserveDesigner" value="${Designer.designerCode}">${Designer.designerName}</th>
+				<td><input type ="hidden" name ="beautyReserveDesigner" value="${Designer.designerCode}">${Designer.designerName}</td>
 			</tr>
 			<tr>
 				<th>회원 아이디</th>
-				<th><input type ="hidden"  name ="beautyReserveUserName" value="${sessionScope.loginUser.userId}">${sessionScope.loginUser.userId}</th>
+				<td><input type ="hidden"  name ="beautyReserveUserId" value="${sessionScope.loginUser.userId}">${sessionScope.loginUser.userId}</td>
 			</tr>			
 			<tr>
 				<th>결제방식</th>
@@ -300,10 +352,10 @@ function usePoint(){
 
 			<tr>
 				<th>가격</th>
-				<th id="beautyReservePrice22"></th>
+				<td id="beautyReservePrice22"></td>
 			</tr>
 			<tr>
-				<th colspan='2'><input type="submit" value="예약"></th>
+				<td colspan='2'><input type="submit" value="예약"></td>
 			</tr>
 		</table>
 	</form>

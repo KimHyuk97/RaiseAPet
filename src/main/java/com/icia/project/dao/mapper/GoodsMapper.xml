@@ -2,23 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="goods">
- 
- <!-- 용품 리스트 -->
- <select id="goodsList" resultType="goods" parameterType="page">
- 	SELECT * FROM GOODS_LIST WHERE RN BETWEEN #{startRow} AND #{endRow}
- </select>
- <!--용품 페이지처리-->
-<select id="goodsListCount" parameterType="String" resultType="int">
-	SELECT COUNT(*) FROM GOODS
+
+<!-- 용품 최신순 데이터 요청 -->
+<select id="goodsSearchList" parameterType="hashMap" resultType="goods">
+	SELECT * FROM (SELECT RV.*, ROW_NUMBER() OVER(ORDER BY GOODSNUM DESC)AS RN FROM GOODS RV WHERE  GOODSCATEGORY LIKE '%'||#{goodsCategory}||'%' AND GOODSNAME  LIKE '%'||#{searchData}||'%' AND GOODSANIMALKIND LIKE '%'||#{goodsAnimalKind}||'%') WHERE RN BETWEEN #{startRow} AND #{endRow}
 </select>
- <!-- 게시글 검색 -->
- <select id="goodsSearch" resultType="goods" parameterType="String">
- 	SELECT * FROM GOODS_LIST WHERE GOODSNAME LIKE '%'||#{goodsSearch}||'%'
- </select>
- <!--카테고리 검색  -->
-  <select id="goodsCategory" resultType="goods" parameterType="goods">
- 	SELECT * FROM GOODS_LIST WHERE GOODSANIMALKIND=#{goodsAnimalKind} AND GOODSCATEGORY=#{goodsCategory}
- </select>
+<!-- 용품 좋아요 순 정렬 데이터 요청 -->
+<select id="goodsLikeLineUp" parameterType="hashMap" resultType="goods">
+	SELECT * FROM (SELECT RV.*, ROW_NUMBER() OVER(ORDER BY GOODSLIKE DESC)AS RN FROM GOODS RV WHERE  GOODSCATEGORY LIKE '%'||#{goodsCategory}||'%' AND  GOODSNAME LIKE '%'||#{searchData}||'%' AND GOODSANIMALKIND LIKE '%'||#{goodsAnimalKind}||'%') WHERE RN BETWEEN #{startRow} AND #{endRow} 
+</select>
+<!-- 용품 오래된 순 정렬 데이터 요청 -->
+<select id="goodsOldLineUp" parameterType="hashMap" resultType="goods">
+	SELECT * FROM (SELECT RV.*, ROW_NUMBER() OVER(ORDER BY GOODSNUM ASC)AS RN FROM GOODS RV WHERE  GOODSCATEGORY LIKE '%'||#{goodsCategory}||'%' AND  GOODSNAME LIKE '%'||#{searchData}||'%' AND GOODSANIMALKIND LIKE '%'||#{goodsAnimalKind}||'%') WHERE RN BETWEEN #{startRow} AND #{endRow}
+</select>
+ <!--용품 페이지처리-->
+<select id="goodsListCount" parameterType="hashMap" resultType="int">
+	SELECT COUNT(*) FROM GOODS WHERE GOODSCATEGORY LIKE '%'||#{goodsCategory}||'%' AND GOODSNAME  LIKE '%'||#{searchData}||'%' AND GOODSANIMALKIND LIKE '%'||#{goodsAnimalKind}||'%'
+</select>
+
  <!-- 용품 상세보기 -->
  <select id="goodsView" parameterType="int" resultType="goods">
  	SELECT * FROM GOODS WHERE GOODSNUM=#{goodsNum}
@@ -28,7 +29,18 @@
  <update id="goodsHit" parameterType="goods">
  	UPDATE GOODS SET GOODSHIT = GOODSHIT+1 WHERE GOODSNUM=#{goodsNum}
  </update>
- 
+ <!--좋아요 수 조회(Ajax)  -->
+ <select id="goodsLikeSelect" parameterType="goods" resultType="goods">
+	SELECT * FROM GOODS WHERE GOODSNUM=#{goodsNum}
+</select>
+ <!--용품 좋아요 아이디 검색  -->
+ <select id="goodsLikeId" parameterType="goods" resultType="String">
+	SELECT LIKEUSERID FROM GOODS_LIKE WHERE LIKEGOODSNUM=#{goodsNum} AND LIKEUSERID=#{likeUserId}
+</select>
+ <!--용품 좋아요 아이디 검색  -->
+ <select id="goodsLikeId2" parameterType="map" resultType="String">
+	SELECT LIKEUSERID FROM GOODS_LIKE WHERE LIKEGOODSNUM=#{goodsNum} AND LIKEUSERID=#{likeUserId}
+</select>
  <!-- 용품 좋아요 -->
  <update id="goodssLike" parameterType="int">
  	UPDATE GOODS SET GOODSLIKE = GOODSLIKE+1 WHERE GOODSNUM=#{goodsNum}
@@ -54,50 +66,48 @@
 	SELECT GOODSLIKE FROM GOODS WHERE GOODSNUM=#{goodsNum}
 </select>
 
-<!-- 좋아요 아이디 조회 -->
-<select id="goodsLikeUserIdCheck" parameterType="goods" resultType="String">
-	SELECT LIKEUSERID FROM GOODS_LIKE WHERE LIKEGOODSNUM=#{goodsNum} AND LIKEUSERID=#{likeUserId}
-</select>
-
  <!-- 용품 구매페이지 -->
  <select id="goodsPayMent" parameterType="int" resultType="goods">
  	SELECT * FROM GOODS WHERE GOODSNUM=#{goodsNum}
  </select>
 <!-- 용품 결제 -->
 <insert id="goodsCard" parameterType="goods">
-	INSERT INTO GOODS_BUY VALUES (#{buyGoodsNum},#{buyUserId},'card',#{buyAddress},'배송 준비중',#{buyCount},#{buyPrice})
+	INSERT INTO GOODS_BUY VALUES (GOODS_BUY_SEQ.nextVal,#{buyGoodsNum},#{buyUserId},'card',#{buyAddress},'배송 준비중',#{buyCount},#{buyPrice},0)
 </insert>
 <!-- 문의글 작성 -->
 <insert id="goodsAskWrite" parameterType="goods">
 	INSERT INTO GOODS_ASK(ASKGOODSNUM,ASKNUM,ASKCONTENTS,ASKUSERID,ASKSECRET,ASKPW) VALUES (#{askGoodsNum},GOODS_ASK_SEQ.nextval,#{askContents},#{askUserId},#{askSecret},#{askPw})
 </insert>
 <!-- 문의글 리스트 -->
-<select id="goodsAskList" resultType="goods" parameterType="int">
-	SELECT * FROM GOODS_ASK WHERE ASKGOODSNUM = #{askGoodsNum} ORDER BY ASKNUM ASC
+<select id="goodsAskList" resultType="goods" parameterType="goods">
+	SELECT * FROM GOODS_ASK WHERE ASKGOODSNUM = #{askGoodsNum} ORDER BY ASKGOODSNUM ASC
 </select>
 <!--비밀글 확인  -->
 <select id="goodsAskPw" resultType="String" parameterType="int">
 	SELECT ASKPW FROM GOODS_ASK WHERE ASKPW = #{askPw}
 </select>
 <!--비밀글 가져오가 -->
-<select id="goodsAskSecret" resultType="String" parameterType="goods">
-	SELECT ASKCONTENTS FROM GOODS_ASK WHERE ASKUSERID = #{askUserId} AND ASKPW = #{askPw} AND ASKGOODSNUM = #{askGoodsNum}
-</select>
-<!--최신순-->
-<select id="goodsDateOrder" resultType="goods" parameterType="page">
-	SELECT * FROM GOODS_LIST WHERE RN BETWEEN #{startRow} AND #{endRow} ORDER BY GOODSNUM DESC
-</select>
-<!--조회순-->
-<select id="goodsHitOrder" resultType="goods" parameterType="page">
-	SELECT * FROM GOODS_LIST WHERE RN BETWEEN #{startRow} AND #{endRow} ORDER BY GOODSHIT DESC
-</select>
-<!--좋아요순-->
-<select id="goodsLikeOrder" resultType="goods" parameterType="page">
-	SELECT * FROM GOODS_LIST WHERE RN BETWEEN #{startRow} AND #{endRow} ORDER BY GOODSLIKE DESC
+<select id="goodsAskSecret" resultType="goods" parameterType="goods">
+	SELECT ASKCONTENTS FROM GOODS_ASK WHERE ASKUSERID = #{askUserId} AND ASKPW = #{askPw} AND ASKGOODSNUM = #{askGoodsNum} AND ASKNUM = #{askNum}
 </select>
 <!--장바구니-->
 <insert id="goodsBasket" parameterType="goods">
 	INSERT INTO	GOODS_BASKET
 	VALUES(#{goodsNum},#{buyUserId},#{basketGoodsCount})
 </insert>
+
+  <!--포인트적립-->
+  <update id="memberAddpoint" parameterType="goods">
+  	UPDATE MEMBERS
+	SET USERPOINT = USERPOINT + (#{buyPrice}*0.05)
+	WHERE USERID = #{buyUserId}
+  </update>
+  
+  <select id="memberSelect" parameterType="goods" resultType="member">
+  	SELECT * FROM MEMBERS WHERE USERID = #{buyUserId}
+  </select>
+  
+    <select id="askIdCheck" parameterType="beauty" resultType="String">
+  	SELECT ASKUSERID FROM GOODS_ASK WHERE ASKUSERID = #{askUserId} AND  ASKGOODSNUM = #{askGoodsNum}
+  </select>
  </mapper> 

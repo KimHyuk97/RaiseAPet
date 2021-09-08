@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>RaiseAPet</title>
 <script>
 alert("예약되었습니다.");
 //약 0.5초 뒤에 꺼진다.

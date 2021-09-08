@@ -23,11 +23,14 @@ public class ReveiwController {
 	private ModelAndView mav = new ModelAndView();
 	
 	//리뷰 작성 전 결제 정보 가져오기
-	@RequestMapping(value="reviewWriteForm", method=RequestMethod.POST)
-	public ModelAndView reviewWriteForm(@RequestParam(value="code", required=false) String code,
-										@RequestParam(value="num", required=false) int num,
-										@RequestParam(value="reviewKind") String reviewKind) {
-		mav = reviewSvc.reviewWriteForm(code, num, reviewKind);
+	@RequestMapping(value="reviewWriteForm", method=RequestMethod.GET)
+	public ModelAndView reviewWriteForm(@RequestParam(value="code", required=false, defaultValue="") String code,
+										@RequestParam(value="num", required=false, defaultValue="0") int num,
+										@RequestParam(value="reviewKind") String reviewKind,
+										@RequestParam(value="reserveNum") int reserveNum) {
+		
+		
+		mav = reviewSvc.reviewWriteForm(code, num, reviewKind, reserveNum);
 		return mav;
 	}
 	//리뷰 작성
@@ -89,7 +92,6 @@ public class ReveiwController {
 	//리뷰 수정 처리
 	@RequestMapping(value = "reviewModifyProcess", method = RequestMethod.POST)
 	public ModelAndView reviewModifyProcess(@ModelAttribute ReviewDTO review) throws IllegalStateException, IOException {
-		System.out.println("reviewModifyProcess");
 		mav = reviewSvc.reviewModifyProcess(review);
 		return mav;
 	}

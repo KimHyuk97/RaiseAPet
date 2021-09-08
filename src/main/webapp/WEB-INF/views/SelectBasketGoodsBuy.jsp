@@ -7,8 +7,63 @@
 <head>
 <meta charset="UTF-8">
 <style>
-	table{
+	.all{
+		text-align: center;
+		margin : 0 auto;
+		width : -33%;
+		border-color: gray;
+	}	
+	
+	fieldset{
+		border-right: none;
+		border-left: none;
+		border-bottom: none;
+		left: 24.7%;
+		position: relative;
+		margin-top: 1%;
+	}
+	
+	header{
+		margin-top: 3%;
+		margin-botton: 2%;
+	}
+	
+	table, tr, td, th{
 		border-collapse: collapse;
+		margin: 0 auto;
+		border-width : medium;
+		border : 1px solid #474747;
+		border-left: none;
+		border-right: none;
+		border-color: gray;
+		table-layout: fixed;
+		/* 
+			테이블의 크기 지정 및 고정 시켜야 할 경우에 사용한다
+			td에서 문자열을 자르거나 숨길 수 있다.
+		 */
+		border-color: gray;
+	}	
+	
+	th{
+		background-color: #f1d2fc;
+		font-size: 13px;
+	}
+	
+	legend{ 
+		padding-left: 3%; 
+		padding-right: 3%;
+		font-size: 18px;
+	}	
+	
+	.btn{
+		margin-top: 5px;
+		margin-bottom: 5px;
+		font-size: 15px;
+		width: 100px;
+		height: 30px;
+		border: none;
+		background-color: #f3d4ff;
+		border-radius: 12px;
 	}
 </style>
 <title>Insert title here</title>
@@ -108,12 +163,12 @@
 			alert("배송지 정보가 없습니다 배송지를 적어주세요");
 
 			var output = "<div>";
-			output += "<input type='text' id='postcode' name='postcode' placeholder='우편번호'>";
-			output += "<input type='button' onclick='execDaumPostcode()' value='우편번호 찾기'><br>";
-			output += "<input type='text' id='address' name='address' placeholder='주소'><br>";
-			output += "<input type='text' id='detailAddress' name='detailAddress' placeholder='상세주소'>";
-			output += "<input type='text' id='extraAddress' name='extraAddress' placeholder='참고항목'>";
-			output += "<input type='button' onclick='addressUpdate()' value='등록'>";
+			output += "<input type='text' id='postcode' name='postcode' placeholder='우편번호'>&nbsp;";
+			output += "<input class='btn' type='button' onclick='execDaumPostcode()' value='우편번호 찾기'><br>";
+			output += "<input type='text' id='address' name='address' placeholder='주소'>";
+			output += "<input type='text' id='detailAddress' name='detailAddress' placeholder='상세주소'><br>";
+			output += "<input type='text' id='extraAddress' name='extraAddress' placeholder='참고항목'>&nbsp;";
+			output += "<input class='btn' type='button' onclick='addressUpdate()' value='등록'>";
 			output += "</div>";
 			$("#addressChange").html(output);
 		}else{
@@ -132,12 +187,12 @@
 	// 신규 배송 정보
 	function newAddress(){
 		var output = "<div>";
-		output += "<input type='text' id='postcode' name='postcode' placeholder='우편번호'>";
-		output += "<input type='button' onclick='execDaumPostcode()' value='우편번호 찾기'><br>";
-		output += "<input type='text' id='address' name='address' placeholder='주소'><br>";
-		output += "<input type='text' id='detailAddress' name='detailAddress' placeholder='상세주소'>";
-		output += "<input type='text' id='extraAddress' name='extraAddress' placeholder='참고항목'>";
-		output += "<input type='button' onclick='addressUpdate()' value='등록'>";
+		output += "<input type='text' id='postcode' name='postcode' placeholder='우편번호'>&nbsp;";
+		output += "<input class='btn' type='button' onclick='execDaumPostcode()' value='우편번호 찾기'><br>";
+		output += "<input type='text' id='address' name='address' placeholder='주소'>";
+		output += "<input type='text' id='detailAddress' name='detailAddress' placeholder='상세주소'><br>";
+		output += "<input type='text' id='extraAddress' name='extraAddress' placeholder='참고항목'>&nbsp;";
+		output += "<input class='btn' type='button' onclick='addressUpdate()' value='등록'>";
 		output += "</div>";
 		$("#addressChange").html(output);
 		$("#addressResult").show();
@@ -191,7 +246,7 @@
 		// 기존 포인트 - 사용한 포인트
 		
 		// 3.
-		var sum = ${totalSum};
+		var sum = ${totalSum + 2500};
 		// 합계 금액
 	
 		// 4.
@@ -201,7 +256,7 @@
 			// 합계 금액  - 사용한 포인트
 			document.getElementById("total_sum").value = total_sum;
 			document.getElementById("totalSumPay").value = total_sum;
-			document.getElementById("total_sum").innerHTML = "총금액 : " + total_sum;
+			document.getElementById("total_sum").innerHTML = "총금액 : " + total_sum +"원";
 			
 			document.getElementById('point').value = ${sessionScope.loginUser.userPoint};
 			// input 태그에 point 전체 값 출력
@@ -240,10 +295,10 @@
 		var use_pointCheck = use_point <= original_point;
 		// 선택 사용 할 때 보유한 포인트 보다 크게 적지 못하게
 		
-		var check = ${totalSum} >= use_point;
+		var check = ${totalSum+2500} >= use_point;
 		// 입력한 포인트가 합계 금액보다 작으면
 		
-		var sum = ${totalSum};
+		var sum = ${totalSum + 2500};
 		// 합계 금액
 
 		if(${sessionScope.loginUser.userPoint} >= 0 && check == true && use_pointCheck == true){
@@ -252,7 +307,7 @@
 			// 합계 금액  - 사용한 포인트
 			document.getElementById("total_sum").value = total_sum;
 			document.getElementById("totalSumPay").value = total_sum;
-			document.getElementById("total_sum").innerHTML = "총금액 : " + total_sum;
+			document.getElementById("total_sum").innerHTML = "총금액 : " + total_sum + "원";
 
 			document.getElementById('original_point').value = point;
 			document.getElementById("original_point").innerHTML = "현재 포인트 : " + point;
@@ -278,7 +333,7 @@
 			// 가지고 있는 포인트 보다 많이 쓰면 기존 금액과 포인트를 출력한다.
 			document.getElementById('total_sum').value = sum;
 			document.getElementById("totalSumPay").value = sum;
-			document.getElementById('total_sum').innerHTML = "총금액 : " + sum;
+			document.getElementById('total_sum').innerHTML = "총금액 : " + sum + "원";
 
 			document.getElementById('original_point').value = original_point;
 			document.getElementById('original_point').innerHTML = "현재 포인트 : " + original_point;
@@ -311,7 +366,7 @@
 
 		if(couponCode1 > 0 && couponCode1 <= 100){ // 퍼센트(/) 할인
 
-			var sum = ${totalSum};
+			var sum = ${totalSum + 2500};
 			// 총합 금액
 			var total_sum = sum / couponCode1;
 			// 합계 금액 / 할인률 = 총금액
@@ -321,12 +376,12 @@
 				alert("금액 이상의 쿠폰은 사용 불가 합니다.");
 				document.getElementById('total_sum').value = sum;
 				document.getElementById("totalSumPay").value = sum;
-				document.getElementById('total_sum').innerHTML = "총금액 : " + sum;
+				document.getElementById('total_sum').innerHTML = "총금액 : " + sum + "원";
 			}else{
 				// 총금액을 출력
 				document.getElementById('total_sum').value = total_sum;
 				document.getElementById("totalSumPay").value = total_sum;
-				document.getElementById('total_sum').innerHTML = "총금액 : " + total_sum;
+				document.getElementById('total_sum').innerHTML = "총금액 : " + total_sum + "원";
 
 				document.getElementById("payCheck").value = 1;
 				
@@ -341,7 +396,7 @@
 			
 		}else if(couponCode1 >= 1000){ // 금액(-) 할인
 
-			var sum = ${totalSum};
+			var sum = ${totalSum + 2500};
 			// 총합 금액
 			var total_sum = sum - couponCode1;
 			// 합계 금액 / 할인률 = 총금액
@@ -351,12 +406,12 @@
 				alert("금액 이상의 쿠폰은 사용 불가 합니다.");
 				document.getElementById('total_sum').value = sum;
 				document.getElementById("totalSumPay").value = sum;
-				document.getElementById('total_sum').innerHTML = "총금액 : " + sum;
+				document.getElementById('total_sum').innerHTML = "총금액 : " + sum + "원";
 			}else{
 				// 총금액을 출력
 				document.getElementById('total_sum').value = total_sum;
 				document.getElementById("totalSumPay").value = total_sum;
-				document.getElementById('total_sum').innerHTML = "총금액 : " + total_sum;
+				document.getElementById('total_sum').innerHTML = "총금액 : " + total_sum + "원";
 
 				document.getElementById("payCheck").value = 1;
 				
@@ -370,14 +425,14 @@
 			}
 		}else{
 
-			var sum = ${totalSum};
+			var sum = ${totalSum + 2500};
 			// 총합 금액
 			var total_sum = sum - couponCode;
 			// 합계 금액 / 할인률 = 총금액
 			
 			document.getElementById('total_sum').value = sum;
 			document.getElementById("totalSumPay").value = sum;
-			document.getElementById('total_sum').innerHTML = "총금액 : " + sum;
+			document.getElementById('total_sum').innerHTML = "총금액 : " + sum + "원";
 
 			document.getElementById("total_point").value = total_point;
 			document.getElementById("total_point").innerHTML = "지급 포인트 : " + total_point;
@@ -409,7 +464,7 @@
 		
 		document.getElementById("msg").innerHTML = "포인트 or 쿠폰함(만원 이상만 사용 가능)";
 
-		var total_point = ${totalSum * 0.05};
+		var total_point = ${(totalSum + 2500) * 0.05};
 		// 포인트
 		total_point = Math.round(total_point);
 		// 반올림
@@ -457,9 +512,17 @@
 	}
 </script>
 </head>
+<header>
+	<div style="height:100%;  width:14.1%; margin:0 auto;">
+		<a class="logo" style=" height: 100%; padding:0;">
+			<img src="resources/images/logo.png" alt="Logo Image" style="float:center; height : 110px;">
+		</a>
+	</div>		
+</header>
 <body>
-	<fieldset>
-		<label>[상품목록]</label>
+	<div class="all">
+	<fieldset style="width: 48%">
+		<legend>[상품 목록]</legend>
 		<div id="0"></div>
 		<div id="1"></div>
 		<div id="2"></div>
@@ -470,14 +533,12 @@
 		<div id="7"></div>
 		<div id="8"></div>
 		<div id="9"></div>
-		<div>총금액 : ${totalSum}</div>
-		<div>총갯수 : ${totalCount}</div>
 	</fieldset>
 	
-	<table border="1">
+	<table border="1" style="width: 50%">
 		<!-- 이름 -->
 		<tr>
-			<td colspan="5">이름 : ${sessionScope.loginUser.userName}</td>
+			<td colspan="5">주문자 : ${sessionScope.loginUser.userName}</td>
 		</tr>
 		
 		<!-- 주소지 -->
@@ -501,23 +562,23 @@
 				<small id="msg"></small>
 				
 				<div id="couponBoxShow">
-					<button onclick="couponBoxShow()">쿠폰함 열기</button>
+					<button class="btn" onclick="couponBoxShow()">쿠폰함 열기</button>
 				</div>
 				
 				<div id="pointBoxShow">
-					<button onclick="pointBoxShow()">포인트 열기</button>
+					<button class="btn" onclick="pointBoxShow()">포인트 열기</button>
 				</div>
 				
 				<div id="couponBoxHide">
-					<button onclick="pointBoxHide()">쿠폰함 닫기</button>
+					<button class="btn" onclick="pointBoxHide()">쿠폰함 닫기</button>
 				
 					<table border="1">
 						<tr>
-							<td>R&P</td>
-							<td>쿠폰 코드</td>
-							<td>쿠폰 이름</td>
-							<td>쿠폰 유효기간</td>
-							<td>쿠폰 내용<input type="hidden" id="couponCheck" value="0"> <!-- 쿠폰 번호 저장  --></td>
+							<th>R&P</th>
+							<th>쿠폰 코드</th>
+							<th>쿠폰 이름</th>
+							<th>쿠폰 유효기간</th>
+							<th>쿠폰 내용<input type="hidden" id="couponCheck" value="0"> <!-- 쿠폰 번호 저장  --></th>
 						</tr>	
 						
 						<c:choose>
@@ -537,7 +598,10 @@
 									<td><input type="radio" id="couponCode${couponList.couponCode}" name="coupon" onclick="couponUse(${couponList.couponCode})" 
 									value="${couponList.couponSale}"></td>
 									<td>${couponList.couponCode}</td>
-									<td>${couponList.couponName}</td>
+									<td style="overflow: hidden;
+									text-overflow: ellipsis; 
+									white-space: nowrap;" 
+									class="contents">${couponList.couponName}</td>
 									<fmt:parseDate var="couponDate" value="${couponList.couponDate}" pattern="YYYY-mm-dd"></fmt:parseDate>
 									<fmt:formatDate var="newFormatted" value="${couponDate}" pattern="YYYY-mm-dd"/> 
 									<td>${newFormatted}</td>
@@ -559,11 +623,11 @@
 				
 				<!-- 포인트 -->
 				<div id="pointBoxHide">
-					<button onclick="pointBoxHide()">포인트 닫기</button><br>
+					<button class="btn" onclick="pointBoxHide()">포인트 닫기</button><br>
 					<input type="hidden" name="userPoint" value="${totalSum * 0.05}">
-					<p id="original_point">현재 포인트 : ${sessionScope.loginUser.userPoint}</p><br>
+					<p id="original_point">현재 포인트 : ${sessionScope.loginUser.userPoint}</p>
 					<input type="text" id="point" onblur="point_ParseCheck()" placeholder="포인트 사용" value=0>
-					<button onclick="point_all()">모두 사용</button><br>
+					<button class="btn" onclick="point_all()">모두 사용</button><br>
 				</div>
 			</td>
 		</tr>
@@ -572,18 +636,20 @@
 		<tr>
 			<td colspan="5">
 				<p id="total_point">지급 포인트 : ${totalSum * 0.05}</p>
-				<p id="total_sum">총금액  : ${totalSum}</p>
+				<p>배송비 : 2500원</p>
+				<p id="total_sum">총금액  : ${totalSum + 2500}원</p>
 				<input type="hidden" id="payCheck"><!-- 할인 방식 체크 -->
 			</td>
 		</tr>
 		
 		<!-- 결제 버튼 -->
 		<tr>
-			<td colspan="5"><button id="card">온라인 결제</button>
-			<input type="hidden" id="totalSumPay" value="${totalSum}"> <!-- 합계 금액 -->
+			<td colspan="5"><button class="btn" id="card">온라인 결제</button>
+			<input type="hidden" id="totalSumPay" value="${totalSum + 2500}"> <!-- 합계 금액 -->
 			</td>
 		</tr>
 	</table>
+	</div>
 </body>
 <!-- 우편주소 API script start -->
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

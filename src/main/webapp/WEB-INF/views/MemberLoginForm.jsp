@@ -129,7 +129,7 @@ function loginCheck(){
 	
 	<!-- SNS 계정으로 로그인 하기 start -->
 	<a href="naverLogin"><img width="18.5%" src="resources/img/naverLogin.jpg"></a><br>
-	<a href="https://kauth.kakao.com/oauth/authorize?client_id=964cb0d4419ff73c619b3139a1a93c8f&redirect_uri=http://localhost:9090/project/login&response_type=code">
+	<a href="https://kauth.kakao.com/oauth/authorize?client_id=964cb0d4419ff73c619b3139a1a93c8f&redirect_uri=http://106.243.194.230:9092/project/login&response_type=code">
 	<img width="18.5%" src="resources/img/kakaoLogin.jpg"></a><br>
 	<!-- SNS 계정으로 로그인 하기 end --><br>
 	

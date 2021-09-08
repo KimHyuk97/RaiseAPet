@@ -32,6 +32,7 @@ public class BeautyService {
 	@Autowired
 	MemberDAO mDAO;
 	
+	BeautyDTO bdl = new BeautyDTO();
 	
 	// 미용사 리스트
 	public ModelAndView beautyList(BeautyDTO beauty) {
@@ -41,11 +42,12 @@ public class BeautyService {
 		return mav;
 	}
 	
-	//디자이너 정보(ajax)
-	BeautyDTO bdl = new BeautyDTO();
-	public BeautyDTO DesignerInformation(BeautyDTO beauty) {
-		bdl = btdao.DesignerInformation(beauty);
-		return bdl;
+	//디자이너 정보
+	public ModelAndView DesignerInformation(BeautyDTO beauty) {
+		BeautyDTO Designer = btdao.DesignerInformation(beauty);
+		mav.addObject("Designer",Designer);
+		mav.setViewName("DesignerInformation");
+		return mav;
 	}
 	
 	//예약페이지
@@ -84,6 +86,8 @@ public class BeautyService {
 			btdao.beautyReservation(beauty);
 			//회원포인트 적립
 			btdao.beautyReservationAddPoint(beauty);
+			MemberDTO member2 = btdao.memberSelect(beauty);
+			session.setAttribute("loginUser", member2);
 			mav.setViewName("BeautyReservationSuccess");
 		}
 		return mav;
@@ -109,6 +113,9 @@ public class BeautyService {
 		btdao.beautyReservation(beauty);
 		//회원포인트 적립
 		btdao.beautyReservationAddPoint(beauty);
+		
+		MemberDTO member2 = btdao.memberSelect(beauty);
+		session.setAttribute("loginUser", member2);
 		
 		return bdl;
 	}

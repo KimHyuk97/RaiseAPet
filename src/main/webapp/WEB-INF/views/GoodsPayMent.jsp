@@ -4,8 +4,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>Raise A Pet</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shorcut icon" href="resources/favicon.ico">
 <meta charset="UTF-8">
-<title>온라인 결제</title>
+<!-- Font -->
+
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+	rel="stylesheet">
+
+
+<!-- Stylesheets -->
+<link href="resources/common-css/bootstrap.css" rel="stylesheet">
+<link href="resources/common-css/ionicons.css" rel="stylesheet">
+<link href="resources/common-css/layerslider.css" rel="stylesheet">
+<link href="resources/01-homepage/css/styles.css" rel="stylesheet">
+<link href="resources/01-homepage/css/responsive.css" rel="stylesheet">
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/resources/js/jquery-3.5.1.js">
+</script>
 <style>
 span {
 	width: 60px;
@@ -16,6 +34,43 @@ textarea {
 	width: 40%;
 	height: 280px;
 }
+table, tr, td, th{
+		border-collapse: collapse;
+		margin: 0 auto;
+		border-width : medium;
+		border : 1px solid #474747;
+		border-left: none;
+		border-right: none;
+		border-color: gray;
+		table-layout: fixed;
+		/* 
+			테이블의 크기 지정 및 고정 시켜야 할 경우에 사용한다
+			td에서 문자열을 자르거나 숨길 수 있다.
+		 */
+		border-color: gray;
+	}	
+	td{
+		padding-bottom: 15px;
+		padding-top: 15px
+	}
+	
+	th{
+		background-color: #f1d2fc;
+		font-size: 13px;
+	}
+	input[type=radio]{
+	display: none;
+	}
+	input[type=radio]+label{
+	display:inline-block;
+	font-size: 14px;
+	width: 120px;
+	height: 40px;
+	border: none;
+	background-color: #f3d4ff;
+	border-radius: 12px;
+	padding-top: 10px;
+	}
 </style>
 </head>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -23,10 +78,8 @@ textarea {
 	src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script type="text/javascript"
 	src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script
-	src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	
+
+
 <!-- 우편주소 API script start -->
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
@@ -40,26 +93,23 @@ textarea {
 	//포인트 폼
 	function Point22() {
 		var data = "";
+		data +="<table style='margin:2% auto; text-align: center;'><tr>"
 		data += "<th>포인트적용</th>";
 		data += "<input type='hidden' name='userId' value='${sessionScope.loginUser.userId}'>";
-		data += "<th><small>잔여포인트:<a onclick='all_point()' id='point'>" + $
-		{
-			sessionScope.loginUser.userPoint
-		}
-		+"</a></small><br/>";
-		data += "<input type='text' id='goodsReservePointUseing' name='userPoint' value='0'><a onclick='usePoint()'>사용</a></th>";
+		data += "<th><small style='font-size:14px;' id='userPoint'>잔여포인트:<a onclick='all_point()' id='point'>"+${sessionScope.loginUser.userPoint}+"</a></small><br/>";
+		data += "<input type='text' id='goodsReservePointUseing' name='userPoint' value='0'><a onclick='usePoint()'>사용</a></th></tr></table>";
 		$('#goodsReservePointCouponForm').html(data);
 	}
 
 	//쿠폰사용
-	function Coupon22() {
+	function Coupon22(){
 		//쿠폰조회
 		$.ajax({
 			type : "GET",
 			url : "medicalReserveCouponList",
 			data : {
 				"userId" : "${sessionScope.loginUser.userId}"
-			},
+					},
 			dataType : "json",
 			success : function(result) {
 				medicalReserveCouponList(result);
@@ -70,22 +120,19 @@ textarea {
 		});
 	}
 	//쿠폰 폼
-	function medicalReserveCouponList(result) {
-
+	function medicalReserveCouponList(result){
 		var output = "";
-		output += "<th>쿠폰적용</th><th>";
-		if (result != null) {
-			for ( var i in result) {
-				output += "<input type='hidden' id='CouponSale"+i+"' name='CouponSale' value='"+result[i].couponSale+"'>";
-				output += result[i].couponName
-						+ "<input type='radio'  name='couponCode' value='"
-						+ result[i].couponCode + "' onclick='couponUse(" + i
-						+ ")'>&nbsp";
+		output += "<table style='margin:2% auto; text-align: center;'><tr>";
+			if (result != null) {
+				for (var i in result) {
+					output += "<th>쿠폰적용</th>";
+					output += "<td><input type='hidden' id='CouponSale"+i+"' name='CouponSale' value='"+result[i].couponSale+"'>";
+					output += result[i].couponName+"<input type='radio'  name='couponCode' value='"+result[i].couponCode+"'onclick='couponUse("+i+")'></td>";
+				}
+			} else {
+				output += "<td>쿠폰이 없습니다.</td>";
 			}
-			output += "</th>";
-		} else {
-			output += "<td><div>쿠폰이 없습니다.</div></td>";
-		}
+		output += "</tr></table>";
 		$('#goodsReservePointCouponForm').html(output);
 	}
 
@@ -107,11 +154,7 @@ textarea {
 
 	//전액 포인트 사용
 	function all_point() {
-		var userPoint = $
-		{
-			sessionScope.loginUser.userPoint
-		}
-		;
+		var userPoint = ${sessionScope.loginUser.userPoint};
 		document.getElementById('point').value = 0;
 		document.getElementById("point").innerHTML = 0;
 		document.getElementById('goodsReservePointUseing').value = userPoint;
@@ -121,14 +164,9 @@ textarea {
 	//포인트 적용
 	function usePoint() {
 		//현재 포인트
-		var Point = $
-		{
-			sessionScope.loginUser.userPoint
-		}
-		;
+		var Point = ${sessionScope.loginUser.userPoint};
 		//사용할려는 포인트
-		var goodsReservePointUseing = document
-				.getElementById('goodsReservePointUseing').value;
+		var goodsReservePointUseing = document.getElementById('goodsReservePointUseing').value;
 		//포인트 변동
 		var userPoint = Point - goodsReservePointUseing;
 
@@ -170,6 +208,7 @@ function payment(){
 	var goodsName = document.getElementById('goodsName').value;//용품 번호
 	var buyUserId = document.getElementById('buyUserId').value;//아이디값
 	var buyPrice = document.getElementById('buyPrice').value;//가격
+	var buyGoodsNum = document.getElementById('buyGoodsNum').value;//용품 번호
 	 IMP.request_pay({
 	 pg : 'inicis',
 	 pay_method : 'card',
@@ -180,11 +219,11 @@ function payment(){
 	  // 이름
 	 }, function(rsp) {
 	    if (rsp.success){
-	    GoodsInsert();
+	    	GoodsInsert();
 	    }else{
 		msg = '결제를 실패하였습니다.';
 		msg += '에러내용 : ' + rsp.error_msg;
-		location.href = "goodsView";
+		location.href = "goodsView?goodsNum="+buyGoodsNum;
 		alert(msg);
 		}
 
@@ -210,11 +249,11 @@ var buyPrice = document.getElementById('buyPrice').value;//가격
 			"buyAddress" : buyAddress,
 			"buyDelivery" : buyDelivery,
 			"buyCount" : buyCount,	
-			"buyPrice" : buyPrice
+			"buyPrice" : buyPrice,
 			},
 	success : function(result) {
 			alert("결제되었습니다.");
-			location.href = "goodsView";
+			location.href = "goodsView?goodsNum="+buyGoodsNum;
 			},
 	error   : function() {
 			alert("결제x");
@@ -274,6 +313,7 @@ function addressUpdate(){
    var extraAddress = document.getElementById("extraAddress").value;
 
    var address = postcode + " " + address + " " + detailAddress + " " + extraAddress;
+
 
    $.ajax({
       type :"POST",
@@ -343,58 +383,105 @@ function execDaumPostcode() {
 </script>
 
 <body>
+	<header style="height: 20%; ">
+			<div style="height: 100%; width: 39%; margin: 0 auto; text-align: center;">
+				<a href="./" class="logo" style="height: 100%; padding: 0;"> 
+				<img src="resources/images/logo.png" alt="Logo Image" style="float: center; height: 100%;">
+				</a>
+			</div>	
+		<!-- conatiner -->
+	</header>
 
-	<h1>결제페이지</h1>
-	<hr>
-	<input type="hidden" name="buyGoodsNum" id="buyGoodsNum" value="${goodsPayMent.goodsNum}">
-	<img src="resources/fileUpload/${goodsView.goodsImage1}" /><br/>
-	상품:<input type="hidden" name="goodsName" id="goodsName" value="${goodsView.goodsName}">${goodsView.goodsName}
-	<hr>
-		<!-- 아이디, 결제 방식,배송지, 배송현황, 구매 갯수, 총가격 -->
+
+<div style="width:40%; margin:2% auto; text-align: center;">
+
+	<h3>결제페이지</h3>
+		<input type="hidden" name="buyGoodsNum" id="buyGoodsNum" value="${goodsPayMent.goodsNum}">
 		<input type="hidden" name="buyPayment" id="buyPayment" value="온라인결제"> 
 		<input	type="hidden" name="buyDelevery" id="buyDelevery" value="배송준비중">
 		<input type="hidden" id="buyCount" name="buyCount" value="${goodsPayMent.buyCount}">
-	<p>
-		<input type="hidden" name="buyUserId" id="buyUserId" value="${sessionScope.loginUser.userId}"> 아이디: ${sessionScope.loginUser.userId}
-	</p>
-	<p>이메일: ${sessionScope.loginUser.userEmail}</p>
-
-	<p>전화번호:${sessionScope.loginUser.userPhone}</p>
-
+		
+	<table style="text-align: center; margin:2% auto; width:100%;">
+		<tr>
+			<td>상품명</td>
+			<td>이메일</td>
+			<td>전화번호</td>
+			<td>아이디</td>
+		</tr>
+		<tr>
+			<td><img src="resources/goodsFile/${goodsView.goodsImage1}" style="width:150px; height:150px;"/><br/><input type="hidden" name="goodsName" id="goodsName" value="${goodsView.goodsName}">${goodsView.goodsName}</td>
+			<td>${sessionScope.loginUser.userEmail}</td>
+			<td>${sessionScope.loginUser.userPhone}</td>
+			<td><input type="hidden" name="buyUserId" id="buyUserId" value="${sessionScope.loginUser.userId}">${sessionScope.loginUser.userId}</td>
+		</tr>
+	</table >
       <!-- 주소지 -->
-      <table>
+      <table style="width:60%; margin:2% auto; text-align: center;">
       <tr>
          <td>
-         <input type="radio" name="address" onclick="address()">기존 배송지로 설정
-         <input type="radio" name="address" onclick="newAddress()">새로운 배송지로 설정
+         <input type="radio" name="address"><label for="radios1" onclick="address()">기본배송지 설정</label>
+         <input type="radio" name="address"><label for="radios1" onclick="newAddress()">새로운 배송지 설정</label>
          <input type="hidden" id="addressCheckResult" value=0> <!-- 배송지 어떤 걸로 선택 했는 지 -->
          
          <div id="addressChange">
             ${sessionScope.loginUser.userAddress}
             <input type='hidden' name='buyAddress' value='${sessionScope.loginUser.userAddress}'>
          </div><br>
-         <span id="addressResult"></span>
+         <div id="addressResult"></div>
          </td>
       </tr>
       </table>
 
 
-
 	<!--쿠폰,포인트 사용여부  -->
-	포인트사용하기
-	<input type='radio' name='PointCoupon' value='포인트사용하기'
-		onclick='Point22()'> 쿠폰사용하기
-	<input type='radio' name='PointCoupon' value='쿠폰사용하기'
-		onclick='Coupon22()'>
-	<!--포인트,쿠폰 폼-->
-	<div id="goodsReservePointCouponForm"></div>
-	<!--변경된 값,넘겨주는 값-->
-	<input type="hidden" id="price" name="buyPrice" value="${goodsPayMent.buyPrice}">
-	<input type="hidden" id="buyPrice" name="buyPrice" value="${goodsPayMent.buyPrice}">
-	<!--초기값,보여주는 값  -->
-	<div id="total_sum">총금액 : ${goodsPayMent.buyPrice}</div>
-	<button onclick="payment()">결제</button>
-	<button onclick="location.href='goodsView'">취소</button>
+	<table style="width:60%; margin:2% auto; text-align: center;">
+		<tr>
+			<td>
+				<input type='radio' name='PointCoupon' value='포인트사용하기'><label for="radios1" onclick='Point22()'>포인트 사용하기</label>
+				<input type='radio' name='PointCoupon' value='쿠폰사용하기'><label for="radios1" onclick='Coupon22()'>쿠폰사용하기</label>		
+			</td>
+		</tr>
+		<tr>
+			<td id="goodsReservePointCouponForm"></td>
+		</tr>
+		<tr>
+			<td>
+				<!--변경된 값,넘겨주는 값-->
+				<input type="hidden" id="price" name="buyPrice" value="${goodsPayMent.buyPrice}">
+				<input type="hidden" id="buyPrice" name="buyPrice" value="${goodsPayMent.buyPrice}">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="hidden" name="buyCount" value="${goodsPayMent.buyCount}">${goodsView.goodsName}+${goodsPayMent.buyCount}
+			</td>
+		</tr>
+		<tr>
+			<td id="total_sum">
+				총금액 : ${goodsPayMent.buyPrice}
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<!--초기값,보여주는 값  -->
+				<button onclick="payment()">결제</button>
+				<button onclick="location.href='goodsView?goodsNum=${goodsPayMent.goodsNum}'">취소</button>
+			</td>
+		</tr>
+	</table>
+	
+</div>
+	
+	<!-- SCIPTS -->
 
+	<script src="resources/common-js/jquery-3.1.1.min.js"></script>
+
+	<script src="resources/common-js/tether.min.js"></script>
+
+	<script src="resources/common-js/bootstrap.js"></script>
+
+	<script src="resources/common-js/layerslider.js"></script>
+
+	<script src="resources/common-js/scripts.js"></script>
 </body>
 </html>

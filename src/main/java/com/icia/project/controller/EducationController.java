@@ -30,10 +30,13 @@ public class EducationController {
 
 	// 교육 페이지 이동
 	@RequestMapping(value="/educationList", method = RequestMethod.GET)
-	public ModelAndView educationList(@ModelAttribute EducationDTO education) {
-		mav = educationSvc.educationList(education);
-		
-		return mav;
+	public ModelAndView educationLineUpList(@RequestParam(value="searchData", required=false, defaultValue="") String searchData,
+			@RequestParam(value="eduAnimalKind", required=false, defaultValue="") String eduAnimalKind,
+			@RequestParam(value="lineUp", required=false, defaultValue="최신순") String lineUp,
+			@RequestParam(value="page", required=false, defaultValue="1") int page,
+			@RequestParam(value="count", required=false, defaultValue="4") int count) {
+			mav = educationSvc.educationList(searchData, eduAnimalKind, lineUp, page, count);
+			return mav;
 	}
 	
 	// 교육 상세페이지 이동

@@ -339,32 +339,6 @@ public class MemberDAO {
 		return sql.delete("member.couponCodeDelete", map);
 	}
 
-	// ------------------------ 결제내역 취소 ------------------------------
-	
-	// 호텔 결제내역 취소
-	public int hotelPayDelete(Map<String, Object> map) {
-		
-		return sql.delete("member.hotelPayDelete", map);
-	}
-
-	// 병원 결제내역 취소
-	public int medicalPayDelete(Map<String, Object> map) {
-		
-		return sql.delete("member.medicalPayDelete", map);
-	}
-	
-	// 미용 결제내역 취소
-	public int beautyPayDelete(Map<String, Object> map) {
-		
-		return sql.delete("member.beautyPayDelete", map);
-	}
-	
-	// 용품 결제내역 취소
-	public int goodsPayDelete(Map<String, Object> map) {
-		
-		return sql.delete("member.goodsPayDelete", map);
-	}
-
 	// -------------------------- 장바구니 결제 -----------------------------
 	
 	// 결제내역 - 쿠폰함 조회
@@ -385,5 +359,31 @@ public class MemberDAO {
 	public GoodsDTO selectBuyInfo(Map<String, Object> map) {
 		
 		return sql.selectOne("member.basketGoodsSelect", map);
+	}
+	
+	// -------------------------- 리뷰 작성 했는 지 확인 -------------------------------------
+	
+	// 호텔 리뷰
+	public int hotelReviewCheck(Map<String, Object> map) {
+		
+		return sql.selectOne("member.hotelReviewCheck", map);
+	}
+
+	// 병원 리뷰
+	public int medicalReviewCheck(Map<String, Object> map) {
+		
+		return sql.selectOne("member.medicalReviewCheck", map);
+	}
+ 
+	// 미용 리뷰
+	public int beautyReviewCheck(Map<String, Object> map) {
+		
+		return sql.selectOne("member.beautyReviewCheck", map);
+	}
+	
+	// 용품 리뷰
+	public int goodsReviewCheck(Map<String, Object> map) {
+		
+		return sql.selectOne("member.goodsReviewCheck", map);
 	}
 }

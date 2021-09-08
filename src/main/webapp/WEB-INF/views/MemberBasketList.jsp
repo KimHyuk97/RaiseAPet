@@ -8,10 +8,63 @@
 <meta charset="UTF-8">
 <title>장바구니</title>
 <style>
-	table{
+	.img{
+		height: 80px;
+		width: 80px;
+		margin-right: 10px;
+		margin-left: 10px;
+	}
+
+	table, tr, td, th{
 		border-collapse: collapse;
+		margin: 0 auto;
+		border-width : medium;
+		border : 1px solid #474747;
+		border-left: none;
+		border-right: none;
+		border-color: gray;
+		table-layout: fixed;
+		/* 
+			테이블의 크기 지정 및 고정 시켜야 할 경우에 사용한다
+			td에서 문자열을 자르거나 숨길 수 있다.
+		 */
+		border-color: gray;
+	}
+	
+	.contents{
+		padding: 0 10px 0 10px;
+	}
+	
+	th{
+		background-color: #f1d2fc;
+	}
+	
+	td{
+		height: 10px;
+	}
+	
+	.all{
+		text-align: center;
+		margin : 0 auto;
+		width : -33%
+	}	
+	
+	header{
+		margin-top: 2%
+	}
+	
+	.btn{
+		margin-top: 5px;
+		margin-bottom: 5px;
+		font-size: 15px;
+		width: 100px;
+		height: 30px;
+		border: none;
+		background-color: #f3d4ff;
+		border-radius: 12px;
 	}
 </style>
+<!-- ///////////////////////////////////////////// CSS ////////////////////////////////////////////// -->
 <script type="text/javaScript" src="${pageContext.request.contextPath}/resources/js/jquery-3.5.1.js"></script>
 <!-- 장바구니 개별 삭제 -->
 <script>
@@ -213,106 +266,123 @@
 		}
 	}
 </script>
+<!-- ///////////////////////////////////////////// script ////////////////////////////////////////////// -->
 </head>
+<header>
+	<div style="height:100%;  width:14%; margin:0 auto;">
+		<a class="logo" style=" height: 100%; padding:0;">
+			<img src="resources/images/logo.png" alt="Logo Image" style="float:center; height : 110px;">
+		</a>
+	</div>		
+</header>
 <body>
-	<h1>장바구니</h1>
-	<table border="1">
-		<tr>
-			<th colspan="1">모두 선택<input type="checkbox" name="allCheck" id="allCheck">
-				<!-- 장바구니 모두 선택 스크립트 -->
-				<script>
-					$("#allCheck").click(function(){
-						var chk = $("#allCheck").prop("checked");
-						if(chk){
-							$(".chkbox").prop("checked", true);
-							itemSum();
-						}else{
-							$(".chkbox").prop("checked", false);
-							itemSum();
-						}
-					})			
-				</script>
-			</th>
+	<div class="all">
+		<table border="1" style="width: 700px">
+			<tr>
+				<th colspan="1">모두 선택<input type="checkbox" name="allCheck" id="allCheck">
+					<!-- 장바구니 모두 선택 스크립트 -->
+					<script>
+						$("#allCheck").click(function(){
+							var chk = $("#allCheck").prop("checked");
+							if(chk){
+								$(".chkbox").prop("checked", true);
+								itemSum();
+							}else{
+								$(".chkbox").prop("checked", false);
+								itemSum();
+							}
+						})			
+					</script>
+				</th>
+				
+				<th colspan="6">
+					Raise A Pet
+				</th>
+			</tr>
 			
-			<th colspan="9">
-				Raise A Pet
-			</th>
-		</tr>
+			<!-- 용품 - 장바구니 내역 출력 부분 -->
+			<c:choose>
+				<c:when test="${not empty basketPagingList}">
+					<c:forEach var="memberBasketList" items="${basketPagingList}">
+						<tr>
+							<!-- 체크박스 -->
+							<td class="product-close">
+								<input type="checkbox" onclick="itemSum()" class="chkbox" id="basketCheckBox" name="basketCheckBox" 
+								value="${memberBasketList.goodsPrice * memberBasketList.basketGoodsCount},${memberBasketList.basketGoodsCount}">
+								<!-- 상품 번호 -->
+								<input type="hidden" class="chBox" id="goodsNum" value="${memberBasketList.goodsNum}"> <!-- 장바구니 선택 삭제, 결제 -->
+								<input type="hidden" class="kakaoCount" value="${memberBasketList.basketGoodsCount}">
+							</td>
+
+							<!-- 상품 사진 -->
+							<td>
+								<input type="hidden" id="userId" value="${loginUser.userId}">
+								<a href="goodsView?goodsNum=${memberBasketList.goodsNum}">
+								<img class="img" src="resources/goodsFile/${memberBasketList.goodsImage1}"/></a>	
+							</td>
+							<!-- 상품 이름 -->
+							<td class="contents">${memberBasketList.goodsName}</td>
+							<!-- 상품 종류 -->
+							<td>${memberBasketList.goodsCategory}</td>
+							<!-- 수량 -->
+							<td>
+								<input style="width: 35px" type="number" min="0" placeholder="수량" id="cartCount${memberBasketList.goodsNum}" 
+								name="cartCheck${memberBasketList.goodsNum}" onchange="countCheck(${memberBasketList.goodsNum})" onblur="cartCountChange(${memberBasketList.goodsNum}, ${paging.page})" value="${memberBasketList.basketGoodsCount}">
+								개
+							</td>
+							<!-- 가격 -->
+							<fmt:formatNumber var="goodsPrice" value="${memberBasketList.goodsPrice}"/> 	
+							<td>${goodsPrice}원</td>
+							<!-- 총합 -->
+							<td>${memberBasketList.goodsPrice * memberBasketList.basketGoodsCount}원</td>
+						</tr>				
 		
-		<!-- 용품 - 장바구니 내역 출력 부분 -->
-		<c:choose>
-			<c:when test="${not empty basketPagingList}">
-				<c:forEach var="memberBasketList" items="${basketPagingList}">
+					</c:forEach>
+					
+					<!-- 선택 삭제, 선택 결제 -->
 					<tr>
-						<td class="product-close">
-							<input type="checkbox" onclick="itemSum()" class="chkbox" id="basketCheckBox" name="basketCheckBox" 
-							value="${memberBasketList.goodsPrice * memberBasketList.basketGoodsCount},${memberBasketList.basketGoodsCount}">
+						<td colspan="7">
+							<input class="btn" type="button" onclick="itemDelete(${paging.page})" value="삭제">&nbsp;
+							
+							<input class="btn" type="button" onclick="itemPay()" value="결제">
+							<input type="hidden" id="totalSumResult" value="0">
+							<input type="hidden" id="totalCountResult" value="0">
 						</td>
-						<td>${memberBasketList.goodsNum}
-							<input type="hidden" class="chBox" id="goodsNum" value="${memberBasketList.goodsNum}"> <!-- 장바구니 선택 삭제, 결제 -->
-							<input type="hidden" class="kakaoCount" value="${memberBasketList.basketGoodsCount}">
-						</td>
-						<td>
-							<input type="hidden" id="userId" value="${loginUser.userId}">
-							<a href="goodsView?goodsNum=${memberBasketList.goodsNum}">${memberBasketList.goodsImage1}</a></td>
-						<td>${memberBasketList.goodsName}</td>
-						<td>${memberBasketList.goodsCategory}</td>
-						<td>
-							<input type="number" min="0" placeholder="수량" id="cartCount${memberBasketList.goodsNum}" 
-							name="cartCheck${memberBasketList.goodsNum}" onchange="countCheck(${memberBasketList.goodsNum})" onblur="cartCountChange(${memberBasketList.goodsNum}, ${paging.page})" value="${memberBasketList.basketGoodsCount}">
-						</td>
-						<fmt:formatNumber var="goodsPrice" value="${memberBasketList.goodsPrice}"/> 	
-						<td>${goodsPrice}</td>
-						<td><input type="text" value="${memberBasketList.goodsPrice * memberBasketList.basketGoodsCount}" readonly="readonly"></td>
-						<td><button onclick="basketDelete(${memberBasketList.goodsNum}, ${paging.page})">삭제</button></td>
-						
-						<td><button onclick="kakaoPay(${memberBasketList.goodsNum},${memberBasketList.goodsPrice},${memberBasketList.basketGoodsCount})">결제</button></td>
-					</tr>				
-	
-				</c:forEach>
+					</tr>
+					
+					<!-- 체크박스를 하나라도 풀면 전체 선택 체크박스를 푸는 스크립트 -->
+					<!-- forEach문 밑에 써줘야 한다. -->
+					<script>
+						$(".chkbox").click(function(){
+							$("#allCheck").prop("checked", false);
+						});
+					</script>
+				</c:when>
 				
-				<!-- 선택 삭제, 선택 결제 -->
-				<tr>
-					<td colspan="10">
-						<input type="button" onclick="itemDelete(${paging.page})" value="선택 삭제">&nbsp;
-						
-						<input type="button" onclick="itemPay()" value="선택 결제">
-						<input type="hidden" id="totalSumResult" value="0">
-						<input type="hidden" id="totalCountResult" value="0">
-					</td>
-				</tr>
-				
-				<!-- 체크박스를 하나라도 풀면 전체 선택 체크박스를 푸는 스크립트 -->
-				<!-- forEach문 밑에 써줘야 한다. -->
-				<script>
-					$(".chkbox").click(function(){
-						$("#allCheck").prop("checked", false);
-					});
-				</script>
-			</c:when>
+				<c:otherwise>
+					<tr>	
+						<td style="height: 100px" colspan="7">기록이 없습니다.</td>
+					</tr>
+				</c:otherwise>
+			</c:choose>
 			
-			<c:otherwise>
-				<tr>	
-					<td colspan="10">기록이 없습니다.</td>
-				</tr>
-			</c:otherwise>
-		</c:choose>
+			<tr>
+				<td colspan="7">
+					<p id="total_count">총갯수 : 0개</p><p id="total_sum">총합 : 0원</p>
+				</td>
+			</tr>
+		</table>
 		
-		<tr>
-			<td colspan="10" class="total-cart-p" id="total_count">총갯수 : 0개</td>
-		</tr>
+		<!-- 페이징 처리 -->
+		<c:if test="${paging.page <= 1}">[이전]&nbsp;</c:if>
+		<c:if test="${paging.page > 1}"><a href="basketPagingList?page=${paging.page-1}">[이전]</a>&nbsp;</c:if>
 		
-		<tr>
-			<td colspan="10" class="total-cart-p" id="total_sum">총합 : 0원
-		</tr>
-	</table>
-	
-	<!-- 페이징 처리 -->
-	<c:if test="${paging.page <= 1}">[이전]&nbsp;</c:if>
-	<c:if test="${paging.page > 1}"><a href="basketPagingList?page=${paging.page-1}">[이전]</a>&nbsp;</c:if>
-	
-	<c:if test="${paging.page >= paging.maxPage}">[다음]&nbsp;</c:if>
-	<c:if test="${paging.page < paging.maxPage}"><a href="basketPagingList?page=${paging.page+1}">[다음]</a>&nbsp;</c:if>
-	<!-- 페이징 처리 -->
+		${paging.page}&nbsp;
+		
+		<c:if test="${paging.page >= paging.maxPage}">[다음]&nbsp;</c:if>
+		<c:if test="${paging.page < paging.maxPage}"><a href="basketPagingList?page=${paging.page+1}">[다음]</a>&nbsp;</c:if>
+		<!-- 페이징 처리 -->
+	</div>
 </body>
+<!-- ///////////////////////////////////////////// body ////////////////////////////////////////////// -->
 </html>

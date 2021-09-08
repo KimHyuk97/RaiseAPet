@@ -4,16 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestAttribute;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.icia.project.dto.CouponDTO;
+
 import com.icia.project.dto.EventCommentDTO;
 import com.icia.project.dto.EventDTO;
 import com.icia.project.dto.MemberDTO;
@@ -60,8 +59,8 @@ public class EventController {
 	
 	//쿠폰지급
 	@RequestMapping(value="/eventCouponPayment",method=RequestMethod.GET)
-	public @ResponseBody HashMap<String, Object> coupon(@RequestParam("eventCouponCode")int eventCouponCode,@RequestParam("userId")String userId) {
-		HashMap<String,Object> map = new HashMap<String,Object>();
+	public @ResponseBody HashMap<String, String> coupon(@RequestParam("eventCouponCode")String eventCouponCode,@RequestParam("userId")String userId) {
+		HashMap<String,String> map = new HashMap<String,String>();
 		map.put("eventCouponCode", eventCouponCode);
 		map.put("userId", userId);
 	
@@ -123,7 +122,7 @@ public class EventController {
 	}
 
 	// EventCommentWrite
-	@RequestMapping(value = "/commentWrite")
+	@RequestMapping(value = "/commentWrite",method = RequestMethod.POST)
 	public @ResponseBody List<EventCommentDTO> eventCommentWrite(MultipartHttpServletRequest multi,@ModelAttribute EventCommentDTO eventComment) throws IllegalStateException, IOException {	
 		
 		MultipartFile commentImageFile = eventComment.getCommentImageFile();
